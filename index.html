@@ -1,0 +1,826 @@
+<!doctype html>
+<html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Delta Care</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&amp;family=Playfair+Display:wght@400;700&amp;display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'DM Sans', sans-serif; }
+    .font-display { font-family: 'Playfair Display', serif; }
+    #loading-screen { position: fixed; inset: 0; z-index: 9999; background: #fff; display: flex; align-items: center; justify-content: center; transition: opacity 0.6s ease, visibility 0.6s ease; }
+    #loading-screen.hidden { opacity: 0; visibility: hidden; }
+    #loading-screen .loader-logo { animation: loadPulse 1.2s ease-in-out infinite; }
+    @keyframes loadPulse { 0%, 100% { transform: scale(1); opacity: 0.7; } 50% { transform: scale(1.05); opacity: 1; } }
+    .page { display: none; opacity: 0; transform: translateY(12px); }
+    .page.active { display: block; animation: pageIn 0.4s ease forwards; }
+    .page.leaving { display: block; animation: pageOut 0.3s ease forwards; }
+    @keyframes pageIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes pageOut { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-8px); } }
+    .hero-entrance-logo { animation: heroLogoEnter 0.8s cubic-bezier(0.25,0.46,0.45,0.94) 0.2s both; }
+    .hero-entrance-tagline { animation: heroTaglineEnter 0.7s cubic-bezier(0.25,0.46,0.45,0.94) 0.5s both; }
+    .hero-entrance-brand { animation: heroBrandEnter 0.7s cubic-bezier(0.25,0.46,0.45,0.94) 0.8s both; }
+    .hero-entrance-cta { animation: heroCtaEnter 0.6s cubic-bezier(0.25,0.46,0.45,0.94) 1.2s both; }
+    @keyframes heroLogoEnter { from { opacity: 0; transform: scale(0.92); } to { opacity: 1; transform: scale(1); } }
+    @keyframes heroTaglineEnter { from { opacity: 0; transform: translateX(-24px); } to { opacity: 1; transform: translateX(0); } }
+    @keyframes heroBrandEnter { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes heroCtaEnter { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .nav-link { position: relative; color: #374151; transition: color 0.3s; }
+    .nav-link::after { content: ''; position: absolute; bottom: 0; left: 50%; width: 0; height: 2px; background: #C41E3A; transition: width 0.3s ease, left 0.3s ease; }
+    .nav-link:hover::after, .nav-link.active::after { width: 100%; left: 0; }
+    .nav-link.active { color: #C41E3A; }
+    .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.fade-left { transform: translateX(-30px); }
+    .reveal.fade-right { transform: translateX(30px); }
+    .reveal.scale-in { transform: scale(0.92); }
+    .reveal.visible { opacity: 1; transform: translate(0) scale(1); }
+    .btn-premium { transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.3s ease; position: relative; overflow: hidden; }
+    .btn-premium:hover { transform: translateY(-2px) scale(1.03); box-shadow: 0 8px 25px rgba(0,0,0,0.12); }
+    .btn-premium:active { transform: translateY(0) scale(1); }
+    .btn-premium .ripple { position: absolute; border-radius: 50%; background: rgba(255,255,255,0.3); transform: scale(0); animation: rippleAnim 0.6s ease-out; }
+    @keyframes rippleAnim { to { transform: scale(4); opacity: 0; } }
+    .product-card { transition: transform 0.35s ease, box-shadow 0.35s ease; }
+    .product-card:hover { transform: translateY(-6px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+    .product-card .card-img { transition: transform 0.5s ease; }
+    .product-card:hover .card-img { transform: scale(1.05); }
+    .product-card .view-btn { opacity: 0; transform: translateY(8px); transition: opacity 0.3s, transform 0.3s; }
+    .product-card:hover .view-btn { opacity: 1; transform: translateY(0); }
+    #products-grid { transition: opacity 0.3s ease; }
+    #products-grid.fading { opacity: 0; }
+    @keyframes badgeBounce { 0%,100%{transform:scale(1)} 50%{transform:scale(1.4)} }
+    .badge-bounce { animation: badgeBounce 0.4s ease; }
+    @keyframes cartShake { 0%,100%{transform:rotate(0)} 25%{transform:rotate(-8deg)} 75%{transform:rotate(8deg)} }
+    .cart-shake { animation: cartShake 0.4s ease; }
+    .fly-item { position: fixed; z-index: 9999; pointer-events: none; transition: all 0.6s cubic-bezier(0.2,0.8,0.2,1); }
+    .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(20px); background: #0b1f3a; color: #fff; padding: 12px 24px; border-radius: 999px; font-size: 14px; font-weight: 500; opacity: 0; z-index: 9998; transition: opacity 0.3s, transform 0.3s; }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    #back-to-top { position: fixed; bottom: 24px; right: 24px; z-index: 100; width: 44px; height: 44px; border-radius: 50%; background: #0b1f3a; color: #fff; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; opacity: 0; transform: translateY(12px); transition: opacity 0.3s, transform 0.3s, background 0.2s; }
+    #back-to-top.visible { opacity: 1; transform: translateY(0); }
+    #back-to-top:hover { background: #C41E3A; }
+    .cat-btn { transition: background 0.3s, color 0.3s, transform 0.2s; }
+    .cat-btn.active { background: #0b1f3a; color: #fff; }
+    .cat-btn:hover { transform: scale(1.03); }
+    .vol-btn.active { background: #0b1f3a; color: #fff; }
+    .syringe-wrap { transition: transform 0.4s cubic-bezier(0.4,0,0.2,1); }
+    .syringe-wrap.zoom { transform: scale(1.05); }
+    .img-hover { transition: transform 0.4s ease, filter 0.4s ease; }
+    .img-hover:hover { transform: scale(1.03); filter: brightness(1.05) drop-shadow(0 4px 12px rgba(0,0,0,0.1)); }
+    .hero-parallax { transition: transform 0.1s linear; }
+    .pattern-dots { background-image: radial-gradient(circle, rgba(196,30,58,0.03) 1px, transparent 1px); background-size: 20px 20px; }
+    .pattern-geometric { background-image: linear-gradient(45deg, rgba(196,30,58,0.02) 25%, transparent 25%), linear-gradient(-45deg, rgba(196,30,58,0.02) 25%, transparent 25%), linear-gradient(45deg, transparent 75%, rgba(196,30,58,0.02) 75%), linear-gradient(-45deg, transparent 75%, rgba(196,30,58,0.02) 75%); background-size: 30px 30px; }
+    .pattern-subtle { background-image: radial-gradient(circle at 20% 50%, rgba(196,30,58,0.015) 1px, transparent 1px), radial-gradient(circle at 80% 80%, rgba(196,30,58,0.015) 1px, transparent 1px); background-size: 50px 50px; }
+    .global-bg-layer { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 0; pointer-events: none; }
+    .global-bg-layer img { width: 100%; height: 100%; object-fit: cover; filter: blur(22px) contrast(0.82); opacity: 0.48; transition: filter 0.5s ease; }
+    .global-bg-layer.light-blur img { filter: blur(6px) contrast(0.82); }
+    .global-bg-overlay { position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,255,255,0.8) 0%, rgba(242,246,255,0.65) 100%); z-index: 1; }
+    .pt-20 { position: relative; z-index: 10; }
+    .prod-item { display: none; }
+    .prod-item.visible { display: block; }
+  </style>
+</head>
+ <body data-template-id="__page-root" class="w-full min-h-screen" style="background: rgb(242, 246, 255);">
+  <div class="global-bg-layer"><img data-template-id="global-bg-image" class="canva-image" loading="lazy" src="https://images.pexels.com/photos/2280571/pexels-photo-2280571.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=1920" alt="Scientist in gloves analyzing blue liquid in a laboratory setting">
+   <div class="global-bg-overlay"></div>
+  </div>
+  <div id="loading-screen">
+   <div class="loader-logo flex flex-col items-center gap-3"><div data-template-id="brand-logo" class="font-display text-4xl font-bold" style="color:#0b1f3a">Delta<span style="color:#C41E3A">Care</span></div>
+    <div class="w-12 h-0.5 bg-gray-200 rounded overflow-hidden">
+     <div class="h-full bg-red-600 animate-pulse" style="width:60%"></div>
+    </div>
+   </div>
+  </div>
+  <nav class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100">
+   <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+    <div class="flex items-center gap-2 cursor-pointer" onclick="navigateTo('home')"><img src="image/dc2-logo.png" 
+        alt="Delta Care Logo"
+        class="h-14 w-auto"></span>
+    </div>
+    <div class="hidden md:flex items-center gap-1"><button class="nav-link active text-sm font-medium px-3 py-2" data-page="home">Home</button> <button class="nav-link text-sm font-medium px-3 py-2" data-page="products">Products</button> <button class="nav-link text-sm font-medium px-3 py-2" data-page="visualizer">Visualizer</button> <button class="nav-link text-sm font-medium px-3 py-2" data-page="about">About Us</button> <button class="nav-link text-sm font-medium px-3 py-2 relative" data-page="cart" id="nav-cart-btn">Cart <span id="nav-cart-badge" class="hidden absolute -top-1 -right-1 bg-red-600 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">0</span></button>
+    </div><button id="mobile-menu-btn" class="md:hidden p-2"><i data-lucide="menu" class="w-5 h-5"></i></button>
+   </div>
+   <div id="mobile-menu" class="hidden md:hidden border-t border-gray-100 bg-white px-4 py-3 space-y-2"><button class="block w-full text-left text-sm font-medium py-2" data-page="home">Home</button> <button class="block w-full text-left text-sm font-medium py-2" data-page="products">Products</button> <button class="block w-full text-left text-sm font-medium py-2" data-page="visualizer">Visualizer</button> <button class="block w-full text-left text-sm font-medium py-2" data-page="about">About Us</button> <button class="block w-full text-left text-sm font-medium py-2" data-page="cart">Cart</button>
+   </div>
+  </nav>
+  <div class="pt-20"><!-- HOME -->
+   <div id="page-home" class="page active relative">
+    <div class="max-w-7xl mx-auto px-4 py-20 md:py-28 grid md:grid-cols-2 gap-12 items-center relative z-10">
+     <div>
+      <h1 data-template-id="hero-title" class="canva-text font-display leading-tight reveal hero-entrance-logo" style="color: rgb(11, 31, 58); font-weight: 700; font-style: normal; font-size: 40px;">Progress in Motion</h1>
+      <p data-template-id="hero-subtitle" class="canva-text mt-5 text-lg leading-relaxed reveal hero-entrance-tagline" style="transition-delay: 100ms; color: rgb(55, 65, 81); font-weight: 400; font-style: normal; font-size: 27px;">Science-backed formulas crafted in Malaysia. Fuel your body with only the finest ingredients for optimal health and performance.</p>
+      <div class="flex gap-4 mt-8 reveal hero-entrance-cta" style="transition-delay:200ms"><button data-template-id="hero-cta" class="canva-button btn-premium px-8 py-3 rounded-full font-medium text-sm tracking-wide" onclick="navigateTo('products')" style="background: rgb(196, 30, 58); color: rgb(255, 255, 255); font-weight: 600; font-style: normal; font-size: 16px;">Shop Now</button> <button data-template-id="hero-cta-secondary" class="canva-button btn-premium px-8 py-3 rounded-full font-medium text-sm tracking-wide border" onclick="navigateTo('about')" style="background: rgb(255, 255, 255); color: rgb(11, 31, 58); font-weight: 600; font-style: normal; font-size: 16px;">Learn More</button>
+      </div>
+     </div>
+     <div class="flex justify-center reveal scale-in" style="transition-delay:150ms"><img data-template-id="hero-image" class="canva-image w-full max-w-lg object-cover hero-parallax img-hover relative z-20" loading="eager" src="image/dc2-logo.png">
+     </div>
+    </div>
+    <section class="max-w-4xl mx-auto px-4 py-16 text-center">
+     <h2 data-template-id="brand-intro-title" class="canva-text font-display reveal hero-entrance-brand" style="color: rgb(11, 31, 58); font-weight: 700; font-style: normal; font-size: 40px;">Welcome to Delta Care</h2>
+     <p data-template-id="brand-intro-text" class="canva-text mt-4 leading-relaxed max-w-2xl mx-auto reveal hero-entrance-brand" style="transition-delay: 100ms; color: rgb(75, 85, 99); font-weight: 400; font-style: normal; font-size: 16px;">At Delta Care, we believe premium health shouldn't be a luxury. Our mission is to deliver science-backed, transparently formulated supplements that empower you to perform at your best — every single day.</p>
+    </section>
+    <section class="bg-gray-50 py-16 pattern-dots">
+     <div class="max-w-7xl mx-auto px-4">
+      <h2 data-template-id="featured-heading" class="canva-text font-display text-center mb-12 reveal" style="color: rgb(11, 31, 58); font-weight: 700; font-style: normal; font-size: 24px;">Featured Products</h2>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+       <div class="product-card bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden reveal" style="--i:0">
+        <div class="overflow-hidden">
+         <img data-template-id="feat-1-img" class="canva-image w-full h-48 object-cover card-img" loading="eager" src="image/Reta-pen.png" alt="Supplement bottle surrounded by oil capsules on white surface">
+        </div>
+        <div class="p-4">
+         <h3 data-template-id="feat-1-name" class="canva-text font-semibold" style="color: rgb(11, 31, 58); font-weight: 600; font-style: normal; font-size: 19px;">Retatrutide</h3>
+         <p data-template-id="feat-1-desc" class="canva-text text-sm mt-1 opacity-70" style="color: rgb(107, 114, 128); font-weight: 400; font-style: normal; font-size: 16px;">Premium lyophilized peptide</p><button class="view-btn mt-3 text-sm font-medium text-red-600 hover:text-red-700" onclick="showProductDetail(0)">View Product →</button>
+        </div>
+       </div>
+       <div class="product-card bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden reveal" style="--i:1">
+        <div class="overflow-hidden">
+         <img data-template-id="feat-2-img" class="canva-image w-full h-48 object-cover card-img" loading="lazy" src="image/motsc.jpeg" alt="White container with protein powder and scoop on beige background">
+        </div>
+        <div class="p-4">
+         <h3 data-template-id="feat-2-name" class="canva-text font-semibold" style="color: rgb(11, 31, 58); font-weight: 600; font-style: normal; font-size: 19px;">Mots-C</h3>
+         <p data-template-id="feat-2-desc" class="canva-text text-sm mt-1 opacity-70" style="color: rgb(107, 114, 128); font-weight: 400; font-style: normal; font-size: 16px;">Mitochondrial-derived peptide.</p><button class="view-btn mt-3 text-sm font-medium text-red-600 hover:text-red-700" onclick="showProductDetail(2)">View Product →</button>
+        </div>
+       </div>
+       <div class="product-card bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden reveal" style="--i:2">
+        <div class="overflow-hidden">
+         <img data-template-id="feat-3-img" class="canva-image w-full h-48 object-cover card-img" loading="lazy" src="image/ghkcu.jpeg" alt="Stack of health supplements including fish oil and collagen bottles">
+        </div>
+        <div class="p-4">
+         <h3 data-template-id="feat-3-name" class="canva-text font-semibold" style="color: rgb(11, 31, 58); font-weight: 600; font-style: normal; font-size: 19px;">Ghk-Cu</h3>
+         <p data-template-id="feat-3-desc" class="canva-text text-sm mt-1 opacity-70" style="color: rgb(107, 114, 128); font-weight: 400; font-style: normal; font-size: 16px;">Copper peptide</p><button class="view-btn mt-3 text-sm font-medium text-red-600 hover:text-red-700" onclick="showProductDetail(3)">View Product →</button>
+        </div>
+       </div>
+       <div class="product-card bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden reveal" style="--i:3">
+        <div class="overflow-hidden">
+         <img data-template-id="feat-4-img" class="canva-image w-full h-48 object-cover card-img" loading="lazy" src="image/Slupp-caps.png" alt="Two weight management supplement bottles on a pink surface">
+        </div>
+        <div class="p-4">
+         <h3 data-template-id="feat-4-name" class="canva-text font-semibold" style="color: rgb(11, 31, 58); font-weight: 600; font-style: normal; font-size: 19px;">Slupp332</h3>
+         <p data-template-id="feat-4-desc" class="canva-text text-sm mt-1 opacity-70" style="color: rgb(107, 114, 128); font-weight: 400; font-style: normal; font-size: 16px;">High purity peptide formulation</p><button class="view-btn mt-3 text-sm font-medium text-red-600 hover:text-red-700" onclick="showProductDetail(4)">View Product →</button>
+        </div>
+       </div>
+      </div>
+     </div>
+    </section>
+    <section class="max-w-7xl mx-auto px-4 py-16 pattern-subtle">
+     <h2 data-template-id="why-heading" class="canva-text font-display text-center mb-12 reveal" style="color: rgb(11, 31, 58); font-weight: 700; font-style: normal; font-size: 24px;">Why Choose Delta Care</h2>
+     <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div data-template-id="why-card-1" class="canva-card text-center p-6 rounded-2xl border border-gray-100 reveal scale-in" style="--i: 0; background: rgb(255, 255, 255);">
+       <div class="w-12 h-12 mx-auto mb-4 bg-red-50 rounded-full flex items-center justify-center">
+        <i data-lucide="shield-check" class="w-6 h-6 text-red-600"></i>
+       </div>
+       <h3 data-template-id="why-1-title" class="canva-text font-semibold" style="color: rgb(11, 31, 58); font-weight: 600; font-style: normal; font-size: 19px;">Quality Focus</h3>
+       <p data-template-id="why-1-desc" class="canva-text text-sm mt-2 opacity-70" style="color: rgb(107, 114, 128); font-weight: 400; font-style: normal; font-size: 16px;">Every product undergoes rigorous testing to ensure purity and potency.</p>
+      </div>
+      <div data-template-id="why-card-2" class="canva-card text-center p-6 rounded-2xl border border-gray-100 reveal scale-in" style="--i: 1; background: rgb(255, 255, 255);">
+       <div class="w-12 h-12 mx-auto mb-4 bg-red-50 rounded-full flex items-center justify-center">
+        <i data-lucide="eye" class="w-6 h-6 text-red-600"></i>
+       </div>
+       <h3 data-template-id="why-2-title" class="canva-text font-semibold" style="color: rgb(11, 31, 58); font-weight: 600; font-style: normal; font-size: 19px;">Transparent Information</h3>
+       <p data-template-id="why-2-desc" class="canva-text text-sm mt-2 opacity-70" style="color: rgb(107, 114, 128); font-weight: 400; font-style: normal; font-size: 16px;">Full ingredient disclosure with no proprietary blends or hidden fillers.</p>
+      </div>
+      <div data-template-id="why-card-3" class="canva-card text-center p-6 rounded-2xl border border-gray-100 reveal scale-in" style="--i: 2; background: rgb(255, 255, 255);">
+       <div class="w-12 h-12 mx-auto mb-4 bg-red-50 rounded-full flex items-center justify-center">
+        <i data-lucide="headphones" class="w-6 h-6 text-red-600"></i>
+       </div>
+       <h3 data-template-id="why-3-title" class="canva-text font-semibold" style="color: rgb(11, 31, 58); font-weight: 600; font-style: normal; font-size: 19px;">Customer Support</h3>
+       <p data-template-id="why-3-desc" class="canva-text text-sm mt-2 opacity-70" style="color: rgb(107, 114, 128); font-weight: 400; font-style: normal; font-size: 16px;">Dedicated support team available via WhatsApp for personalised guidance.</p>
+      </div>
+      <div data-template-id="why-card-4" class="canva-card text-center p-6 rounded-2xl border border-gray-100 reveal scale-in" style="--i: 3; background: rgb(255, 255, 255);">
+       <div class="w-12 h-12 mx-auto mb-4 bg-red-50 rounded-full flex items-center justify-center">
+        <i data-lucide="sparkles" class="w-6 h-6 text-red-600"></i>
+       </div>
+       <h3 data-template-id="why-4-title" class="canva-text font-semibold" style="color: rgb(11, 31, 58); font-weight: 600; font-style: normal; font-size: 19px;">Premium Experience</h3>
+       <p data-template-id="why-4-desc" class="canva-text text-sm mt-2 opacity-70" style="color: rgb(107, 114, 128); font-weight: 400; font-style: normal; font-size: 16px;">From packaging to formulation, every detail reflects our commitment to excellence.</p>
+      </div>
+     </div>
+    </section>
+    <section data-template-id="home-cta-section" class="canva-section py-16 pattern-geometric reveal" style="background: rgb(11, 31, 58);">
+     <div class="max-w-2xl mx-auto text-center px-4">
+      <h2 data-template-id="home-cta-title" class="canva-text font-display" style="color: rgb(255, 255, 255); font-weight: 700; font-style: normal; font-size: 24px;">Explore the DeltaCare Collection</h2><button data-template-id="home-cta-btn" class="canva-button btn-premium mt-6 px-8 py-3 rounded-full font-medium text-sm" onclick="navigateTo('products')" style="background: rgb(196, 30, 58); color: rgb(255, 255, 255); font-weight: 600; font-style: normal; font-size: 16px;">Shop Now</button>
+     </div>
+    </section>
+   </div><!-- PRODUCTS PAGE -->
+   <div id="page-products" class="page relative">
+    <div class="max-w-7xl mx-auto px-4 py-12 relative z-10">
+     <h1 data-template-id="products-page-title" class="canva-text font-display text-center mb-8 reveal" style="color: rgb(11, 31, 58); font-weight: 700; font-style: normal; font-size: 32px;">Our Products</h1>
+     <div class="flex flex-wrap justify-center gap-2 mb-10 reveal" style="transition-delay:100ms"><button class="cat-btn active px-4 py-2 rounded-full text-sm font-medium border border-gray-200" data-cat="all">All Products</button> <button class="cat-btn px-4 py-2 rounded-full text-sm font-medium border border-gray-200" data-cat="fat-loss">Fat Loss</button> <button class="cat-btn px-4 py-2 rounded-full text-sm font-medium border border-gray-200" data-cat="muscle">Muscle Support</button> <button class="cat-btn px-4 py-2 rounded-full text-sm font-medium border border-gray-200" data-cat="recovery">Recovery</button> <button class="cat-btn px-4 py-2 rounded-full text-sm font-medium border border-gray-200" data-cat="skin">Clear Skin</button> <button class="cat-btn px-4 py-2 rounded-full text-sm font-medium border border-gray-200" data-cat="wellness">Wellness</button>
+     </div>
+     <div id="products-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"><!-- Product 0 -->
+      <div class="prod-item visible product-card bg-white rounded-2xl border border-gray-100 overflow-hidden" data-cat="wellness" data-id="0" data-status="ready">
+       <div class="relative overflow-hidden"><img data-template-id="prod-0-img" class="canva-image w-full h-52 object-cover card-img" loading="lazy" src="image/Reta-10mg.jpeg" alt="Supplement bottle surrounded by oil capsules on white surface">
+        <div class="absolute top-3 right-3 px-3 py-1.5 rounded-full text-xs font-semibold text-white bg-emerald-500">
+         Ready Stock
+        </div>
+       </div>
+       <div class="p-5">
+        <h3 data-template-id="prod-0-name" class="canva-text font-semibold text-gray-900" style="color: rgb(17, 24, 39); font-weight: 600; font-style: normal; font-size: 19px;">Retatrutide 10mg</h3>
+        <p data-template-id="prod-0-desc" class="canva-text text-sm text-gray-500 mt-1" style="color: rgb(107, 114, 128); font-weight: 400; font-style: normal; font-size: 16px;">Premium lyophilized peptide</p>
+        <p data-template-id="prod-0-price" class="canva-text text-lg font-bold text-red-600 mt-3" style="color: rgb(220, 38, 38); font-weight: 700; font-style: normal; font-size: 16px;">RM 350</p>
+        <div class="flex gap-2 mt-4"><button onclick="showProductDetail(0)" class="flex-1 border border-gray-200 text-sm font-medium py-2 rounded-full hover:bg-gray-50 transition-all">View Details</button> <button onclick="addToCart(0, event)" class="btn-premium flex-1 bg-red-600 text-white text-sm font-medium py-2 rounded-full hover:bg-red-700">Add to Cart</button>
+        </div>
+       </div>
+       <div class="hidden" data-benefits="true">
+        <span data-template-id="prod-0-benefits" class="canva-text" style="color: rgb(55, 65, 81); font-weight: 400; font-style: normal; font-size: 16px;">Supports cardiovascular health|Improves brain function|Reduces inflammation</span>
+       </div>
+       <div class="hidden" data-faq="true">
+        <span data-template-id="prod-0-faq" class="canva-text" style="color: rgb(55, 65, 81); font-weight: 400; font-style: normal; font-size: 16px;">How many capsules per day?::Take 2 softgels daily with meals.|Is it sustainably sourced?::Yes, sourced from wild-caught fish.</span>
+       </div>
+      </div><!-- Product 1 -->
+      <div class="prod-item visible product-card bg-white rounded-2xl border border-gray-100 overflow-hidden" data-cat="wellness" data-id="1" data-status="ready">
+       <div class="relative overflow-hidden"><img data-template-id="prod-1-img" class="canva-image w-full h-52 object-cover card-img" loading="lazy" src="image/Reta-30mg.jpeg" alt="Supplement bottle surrounded by oil capsules on white surface">
+        <div class="absolute top-3 right-3 px-3 py-1.5 rounded-full text-xs font-semibold text-white bg-emerald-500">
+         Ready Stock
+        </div>
+       </div>
+       <div class="p-5">
+        <h3 data-template-id="prod-1-name" class="canva-text font-semibold text-gray-900" style="color: rgb(17, 24, 39); font-weight: 600; font-style: normal; font-size: 19px;">Retatrutide 30mg</h3>
+        <p data-template-id="prod-1-desc" class="canva-text text-sm text-gray-500 mt-1" style="color: rgb(107, 114, 128); font-weight: 400; font-style: normal; font-size: 16px;">Higher concentration formula</p>
+        <p data-template-id="prod-1-price" class="canva-text text-lg font-bold text-red-600 mt-3" style="color: rgb(220, 38, 38); font-weight: 700; font-style: normal; font-size: 16px;">RM 650</p>
+        <div class="flex gap-2 mt-4"><button onclick="showProductDetail(1)" class="flex-1 border border-gray-200 text-sm font-medium py-2 rounded-full hover:bg-gray-50 transition-all">View Details</button> <button onclick="addToCart(1, event)" class="btn-premium flex-1 bg-red-600 text-white text-sm font-medium py-2 rounded-full hover:bg-red-700">Add to Cart</button>
+        </div>
+       </div>
+       <div class="hidden" data-benefits="true">
+        <span data-template-id="prod-1-benefits" class="canva-text" style="color: rgb(55, 65, 81); font-weight: 400; font-style: normal; font-size: 16px;">Strengthens bones|Boosts immune system|Supports calcium absorption</span>
+       </div>
+       <div class="hidden" data-faq="true">
+        <span data-template-id="prod-1-faq" class="canva-text" style="color: rgb(55, 65, 81); font-weight: 400; font-style: normal; font-size: 16px;">Can I take it with food?::Yes, best absorbed with a fat-containing meal.|Is it suitable for vegetarians?::Yes, our formula uses plant-based K2.</span>
+       </div>
+      </div><!-- Product 2 -->
+      <div class="prod-item visible product-card bg-white rounded-2xl border border-gray-100 overflow-hidden" data-cat="muscle" data-id="2" data-status="ready">
+       <div class="relative overflow-hidden"><img data-template-id="prod-2-img" class="canva-image w-full h-52 object-cover card-img" loading="lazy" src="image/motsc.jpeg" alt="White container with protein powder and scoop on beige background">
+        <div class="absolute top-3 right-3 px-3 py-1.5 rounded-full text-xs font-semibold text-white bg-emerald-500">
+         Ready Stock
+        </div>
+       </div>
+       <div class="p-5">
+        <h3 data-template-id="prod-2-name" class="canva-text font-semibold text-gray-900" style="color: rgb(17, 24, 39); font-weight: 600; font-style: normal; font-size: 19px;">Mots-C 40mg</h3>
+        <p data-template-id="prod-2-desc" class="canva-text text-sm text-gray-500 mt-1" style="color: rgb(107, 114, 128); font-weight: 400; font-style: normal; font-size: 16px;">Mitochondrial-derived peptide</p>
+        <p data-template-id="prod-2-price" class="canva-text text-lg font-bold text-red-600 mt-3" style="color: rgb(220, 38, 38); font-weight: 700; font-style: normal; font-size: 16px;">RM 550</p>
+        <div class="flex gap-2 mt-4"><button onclick="showProductDetail(2)" class="flex-1 border border-gray-200 text-sm font-medium py-2 rounded-full hover:bg-gray-50 transition-all">View Details</button> <button onclick="addToCart(2, event)" class="btn-premium flex-1 bg-red-600 text-white text-sm font-medium py-2 rounded-full hover:bg-red-700">Add to Cart</button>
+        </div>
+       </div>
+       <div class="hidden" data-benefits="true">
+        <span data-template-id="prod-2-benefits" class="canva-text" style="color: rgb(55, 65, 81); font-weight: 400; font-style: normal; font-size: 16px;">27g protein per serving|Fast absorption|Lean muscle growth</span>
+       </div>
+       <div class="hidden" data-faq="true">
+        <span data-template-id="prod-2-faq" class="canva-text" style="color: rgb(55, 65, 81); font-weight: 400; font-style: normal; font-size: 16px;">Is it lactose-free?::Contains minimal lactose due to isolation process.|How should I mix it?::Blend with 250ml water or milk.</span>
+       </div>
+      </div><!-- Product 3 -->
+      <div class="prod-item visible product-card bg-white rounded-2xl border border-gray-100 overflow-hidden" data-cat="skin" data-id="3" data-status="preorder">
+       <div class="relative overflow-hidden"><img data-template-id="prod-3-img" class="canva-image w-full h-52 object-cover card-img" loading="lazy" src="image/ghkcu.jpeg" alt="Stack of health supplements including fish oil and collagen bottles">
+        <div class="absolute top-3 right-3 px-3 py-1.5 rounded-full text-xs font-semibold text-white bg-amber-500">
+         Pre-Order
+        </div>
+       </div>
+       <div class="p-5">
+        <h3 data-template-id="prod-3-name" class="canva-text font-semibold text-gray-900" style="color: rgb(17, 24, 39); font-weight: 600; font-style: normal; font-size: 19px;">Ghk-Cu 100mg</h3>
+        <p data-template-id="prod-3-desc" class="canva-text text-sm text-gray-500 mt-1" style="color: rgb(107, 114, 128); font-weight: 400; font-style: normal; font-size: 16px;">Copper peptide</p>
+        <p data-template-id="prod-3-price" class="canva-text text-lg font-bold text-red-600 mt-3" style="color: rgb(220, 38, 38); font-weight: 700; font-style: normal; font-size: 16px;">RM 220</p>
+        <p class="text-xs text-amber-600 mt-1 font-medium">Estimated availability via WhatsApp</p>
+        <div class="flex gap-2 mt-4"><button onclick="showProductDetail(3)" class="flex-1 border border-gray-200 text-sm font-medium py-2 rounded-full hover:bg-gray-50 transition-all">View Details</button> <button onclick="addToCart(3, event)" class="btn-premium flex-1 bg-red-600 text-white text-sm font-medium py-2 rounded-full hover:bg-red-700">Add to Cart</button>
+        </div>
+       </div>
+       <div class="hidden" data-benefits="true">
+        <span data-template-id="prod-3-benefits" class="canva-text" style="color: rgb(55, 65, 81); font-weight: 400; font-style: normal; font-size: 16px;">Improves skin elasticity|Strengthens hair &amp; nails|Supports joint health</span>
+       </div>
+       <div class="hidden" data-faq="true">
+        <span data-template-id="prod-3-faq" class="canva-text" style="color: rgb(55, 65, 81); font-weight: 400; font-style: normal; font-size: 16px;">When will I see results?::Most users notice improvements in 4-6 weeks.|Can I add it to hot drinks?::Yes, it dissolves in both hot and cold liquids.</span>
+       </div>
+      </div><!-- Product 4 -->
+      <div class="prod-item visible product-card bg-white rounded-2xl border border-gray-100 overflow-hidden" data-cat="fat-loss" data-id="4" data-status="ready">
+       <div class="relative overflow-hidden"><img data-template-id="prod-4-img" class="canva-image w-full h-52 object-cover card-img" loading="lazy" src="image/Slupp-vial.jpeg" alt="Two weight management supplement bottles on a pink surface">
+        <div class="absolute top-3 right-3 px-3 py-1.5 rounded-full text-xs font-semibold text-white bg-emerald-500">
+         Ready Stock
+        </div>
+       </div>
+       <div class="p-5">
+        <h3 data-template-id="prod-4-name" class="canva-text font-semibold text-gray-900" style="color: rgb(17, 24, 39); font-weight: 600; font-style: normal; font-size: 19px;">Slupp332 5mg</h3>
+        <p data-template-id="prod-4-desc" class="canva-text text-sm text-gray-500 mt-1" style="color: rgb(107, 114, 128); font-weight: 400; font-style: normal; font-size: 16px;">High purity peptide formulation</p>
+        <p data-template-id="prod-4-price" class="canva-text text-lg font-bold text-red-600 mt-3" style="color: rgb(220, 38, 38); font-weight: 700; font-style: normal; font-size: 16px;">RM 250</p>
+        <div class="flex gap-2 mt-4"><button onclick="showProductDetail(4)" class="flex-1 border border-gray-200 text-sm font-medium py-2 rounded-full hover:bg-gray-50 transition-all">View Details</button> <button onclick="addToCart(4, event)" class="btn-premium flex-1 bg-red-600 text-white text-sm font-medium py-2 rounded-full hover:bg-red-700">Add to Cart</button>
+        </div>
+       </div>
+       <div class="hidden" data-benefits="true">
+        <span data-template-id="prod-4-benefits" class="canva-text" style="color: rgb(55, 65, 81); font-weight: 400; font-style: normal; font-size: 16px;">Supports fat metabolism|Preserves lean muscle|Natural plant-derived</span>
+       </div>
+       <div class="hidden" data-faq="true">
+        <span data-template-id="prod-4-faq" class="canva-text" style="color: rgb(55, 65, 81); font-weight: 400; font-style: normal; font-size: 16px;">How long to take it?::Best results with 8-12 weeks of consistent use.|Any side effects?::Generally well-tolerated when taken as directed.</span>
+       </div>
+      </div><!-- Product 5 -->
+      <div class="prod-item visible product-card bg-white rounded-2xl border border-gray-100 overflow-hidden" data-cat="fat-loss" data-id="5" data-status="outofstock">
+       <div class="relative overflow-hidden"><img data-template-id="prod-5-img" class="canva-image w-full h-52 object-cover card-img" loading="lazy" src="image/Slupp-caps.png" alt="Two weight management supplement bottles on a pink surface">
+        <div class="absolute top-3 right-3 px-3 py-1.5 rounded-full text-xs font-semibold text-white bg-red-500">
+         Out of Stock
+        </div>
+       </div>
+       <div class="p-5">
+        <h3 data-template-id="prod-5-name" class="canva-text font-semibold text-gray-900" style="color: rgb(17, 24, 39); font-weight: 600; font-style: normal; font-size: 19px;">Slupp332 1000mg</h3>
+        <p data-template-id="prod-5-desc" class="canva-text text-sm text-gray-500 mt-1" style="color: rgb(107, 114, 128); font-weight: 400; font-style: normal; font-size: 16px;">Capsule format (60 caps)</p>
+        <p data-template-id="prod-5-price" class="canva-text text-lg font-bold text-red-600 mt-3" style="color: rgb(220, 38, 38); font-weight: 700; font-style: normal; font-size: 16px;">RM 200</p>
+        <div class="flex gap-2 mt-4"><button onclick="showProductDetail(5)" class="flex-1 border border-gray-200 text-sm font-medium py-2 rounded-full hover:bg-gray-50 transition-all">View Details</button> <button disabled="" class="flex-1 bg-gray-400 text-white text-sm font-medium py-2 rounded-full cursor-not-allowed">Currently Unavailable</button>
+        </div>
+       </div>
+       <div class="hidden" data-benefits="true">
+        <span data-template-id="prod-5-benefits" class="canva-text" style="color: rgb(55, 65, 81); font-weight: 400; font-style: normal; font-size: 16px;">Boosts energy during workouts|Supports fat transport|Sugar-free formula</span>
+       </div>
+       <div class="hidden" data-faq="true">
+        <span data-template-id="prod-5-faq" class="canva-text" style="color: rgb(55, 65, 81); font-weight: 400; font-style: normal; font-size: 16px;">When should I take it?::30 minutes before exercise for best results.|Does it contain caffeine?::No, stimulant-free formula.</span>
+       </div>
+      </div><!-- Product 6 -->
+      <div class="prod-item visible product-card bg-white rounded-2xl border border-gray-100 overflow-hidden" data-cat="muscle" data-id="6" data-status="ready">
+       <div class="relative overflow-hidden"><img data-template-id="prod-6-img" class="canva-image w-full h-52 object-cover card-img" loading="lazy" src="image/Reta-pen.png" alt="White container with protein powder and scoop on beige background">
+        <div class="absolute top-3 right-3 px-3 py-1.5 rounded-full text-xs font-semibold text-white bg-emerald-500">
+         Ready Stock
+        </div>
+       </div>
+       <div class="p-5">
+        <h3 data-template-id="prod-6-name" class="canva-text font-semibold text-gray-900" style="color: rgb(17, 24, 39); font-weight: 600; font-style: normal; font-size: 19px;">Reta 15mg Pen</h3>
+        <p data-template-id="prod-6-desc" class="canva-text text-sm text-gray-500 mt-1" style="color: rgb(107, 114, 128); font-weight: 400; font-style: normal; font-size: 16px;">Pre-filled pen format (Full set)</p>
+        <p data-template-id="prod-6-price" class="canva-text text-lg font-bold text-red-600 mt-3" style="color: rgb(220, 38, 38); font-weight: 700; font-style: normal; font-size: 16px;">RM 650</p>
+        <div class="flex gap-2 mt-4"><button onclick="showProductDetail(6)" class="flex-1 border border-gray-200 text-sm font-medium py-2 rounded-full hover:bg-gray-50 transition-all">View Details</button> <button onclick="addToCart(6, event)" class="btn-premium flex-1 bg-red-600 text-white text-sm font-medium py-2 rounded-full hover:bg-red-700">Add to Cart</button>
+        </div>
+       </div>
+       <div class="hidden" data-benefits="true">
+        <span data-template-id="prod-6-benefits" class="canva-text" style="color: rgb(55, 65, 81); font-weight: 400; font-style: normal; font-size: 16px;">Increases strength output|Supports muscle volume|Improves recovery between sets</span>
+       </div>
+       <div class="hidden" data-faq="true">
+        <span data-template-id="prod-6-faq" class="canva-text" style="color: rgb(55, 65, 81); font-weight: 400; font-style: normal; font-size: 16px;">Do I need a loading phase?::Optional. 5g daily is effective long-term.|Can I mix with protein?::Yes, perfectly fine to combine.</span>
+       </div>
+      </div><!-- Product 7 -->
+      <div class="prod-item visible product-card bg-white rounded-2xl border border-gray-100 overflow-hidden" data-cat="recovery" data-id="7" data-status="ready">
+       <div class="relative overflow-hidden"><img data-template-id="prod-7-img" class="canva-image w-full h-52 object-cover card-img" loading="lazy" src="image/Reta-pen.png" alt="Supplement bottle surrounded by oil capsules on white surface">
+        <div class="absolute top-3 right-3 px-3 py-1.5 rounded-full text-xs font-semibold text-white bg-emerald-500">
+         Ready Stock
+        </div>
+       </div>
+       <div class="p-5">
+        <h3 data-template-id="prod-7-name" class="canva-text font-semibold text-gray-900" style="color: rgb(17, 24, 39); font-weight: 600; font-style: normal; font-size: 19px;">Reta 30mg Pen</h3>
+        <p data-template-id="prod-7-desc" class="canva-text text-sm text-gray-500 mt-1" style="color: rgb(107, 114, 128); font-weight: 400; font-style: normal; font-size: 16px;">High-capacity pre-filled pen format (Full set)</p>
+        <p data-template-id="prod-7-price" class="canva-text text-lg font-bold text-red-600 mt-3" style="color: rgb(220, 38, 38); font-weight: 700; font-style: normal; font-size: 16px;">RM 850</p>
+        <div class="flex gap-2 mt-4"><button onclick="showProductDetail(7)" class="flex-1 border border-gray-200 text-sm font-medium py-2 rounded-full hover:bg-gray-50 transition-all">View Details</button> <button onclick="addToCart(7, event)" class="btn-premium flex-1 bg-red-600 text-white text-sm font-medium py-2 rounded-full hover:bg-red-700">Add to Cart</button>
+        </div>
+       </div>
+       <div class="hidden" data-benefits="true">
+        <span data-template-id="prod-7-benefits" class="canva-text" style="color: rgb(55, 65, 81); font-weight: 400; font-style: normal; font-size: 16px;">Reduces muscle cramps|Promotes restful sleep|Supports nervous system</span>
+       </div>
+       <div class="hidden" data-faq="true">
+        <span data-template-id="prod-7-faq" class="canva-text" style="color: rgb(55, 65, 81); font-weight: 400; font-style: normal; font-size: 16px;">Best time to take?::Evening, 30 minutes before bed.|Which forms of magnesium?::Glycinate, citrate, and taurate blend.</span>
+       </div>
+      </div><!-- Product 8 -->
+      <div class="prod-item visible product-card bg-white rounded-2xl border border-gray-100 overflow-hidden" data-cat="wellness" data-id="8" data-status="ready">
+       <div class="relative overflow-hidden"><img data-template-id="prod-8-img" class="canva-image w-full h-52 object-cover card-img" loading="lazy" src="https://images.pexels.com/photos/14744701/pexels-photo-14744701.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=800" alt="Supplement bottle surrounded by oil capsules on white surface">
+        <div class="absolute top-3 right-3 px-3 py-1.5 rounded-full text-xs font-semibold text-white bg-emerald-500">
+         Ready Stock
+        </div>
+       </div>
+       <div class="p-5">
+        <h3 data-template-id="prod-8-name" class="canva-text font-semibold text-gray-900" style="color: rgb(17, 24, 39); font-weight: 600; font-style: normal; font-size: 19px;">HepatoRenal 1900mg</h3>
+        <p data-template-id="prod-8-desc" class="canva-text text-sm text-gray-500 mt-1" style="color: rgb(107, 114, 128); font-weight: 400; font-style: normal; font-size: 16px;">Internal protection (60 servings)</p>
+        <p data-template-id="prod-8-price" class="canva-text text-lg font-bold text-red-600 mt-3" style="color: rgb(220, 38, 38); font-weight: 700; font-style: normal; font-size: 16px;">RM 35</p>
+        <div class="flex gap-2 mt-4"><button onclick="showProductDetail(8)" class="flex-1 border border-gray-200 text-sm font-medium py-2 rounded-full hover:bg-gray-50 transition-all">View Details</button> <button onclick="addToCart(8, event)" class="btn-premium flex-1 bg-red-600 text-white text-sm font-medium py-2 rounded-full hover:bg-red-700">Add to Cart</button>
+        </div>
+       </div>
+       <div class="hidden" data-benefits="true">
+        <span data-template-id="prod-8-benefits" class="canva-text" style="color: rgb(55, 65, 81); font-weight: 400; font-style: normal; font-size: 16px;">Strengthens immunity|Antioxidant protection|Supports skin healing</span>
+       </div>
+       <div class="hidden" data-faq="true">
+        <span data-template-id="prod-8-faq" class="canva-text" style="color: rgb(55, 65, 81); font-weight: 400; font-style: normal; font-size: 16px;">Can children take this?::Consult a healthcare professional for children under 12.|Is it suitable for daily use?::Yes, designed for daily supplementation.</span>
+       </div>
+      </div><!-- Product 9 -->
+      <div class="prod-item visible product-card bg-white rounded-2xl border border-gray-100 overflow-hidden" data-cat="skin" data-id="9" data-status="ready">
+       <div class="relative overflow-hidden"><img data-template-id="prod-9-img" class="canva-image w-full h-52 object-cover card-img" loading="lazy" src="https://images.pexels.com/photos/29060401/pexels-photo-29060401.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=800" alt="Stack of health supplements including fish oil and collagen bottles">
+        <div class="absolute top-3 right-3 px-3 py-1.5 rounded-full text-xs font-semibold text-white bg-emerald-500">
+         Ready Stock
+        </div>
+       </div>
+       <div class="p-5">
+        <h3 data-template-id="prod-9-name" class="canva-text font-semibold text-gray-900" style="color: rgb(17, 24, 39); font-weight: 600; font-style: normal; font-size: 19px;">Clear Skin Formula</h3>
+        <p data-template-id="prod-9-desc" class="canva-text text-sm text-gray-500 mt-1" style="color: rgb(107, 114, 128); font-weight: 400; font-style: normal; font-size: 16px;">Targeted nutrients for blemish-free, glowing skin.</p>
+        <p data-template-id="prod-9-price" class="canva-text text-lg font-bold text-red-600 mt-3" style="color: rgb(220, 38, 38); font-weight: 700; font-style: normal; font-size: 16px;">RM 95</p>
+        <div class="flex gap-2 mt-4"><button onclick="showProductDetail(9)" class="flex-1 border border-gray-200 text-sm font-medium py-2 rounded-full hover:bg-gray-50 transition-all">View Details</button> <button onclick="addToCart(9, event)" class="btn-premium flex-1 bg-red-600 text-white text-sm font-medium py-2 rounded-full hover:bg-red-700">Add to Cart</button>
+        </div>
+       </div>
+       <div class="hidden" data-benefits="true">
+        <span data-template-id="prod-9-benefits" class="canva-text" style="color: rgb(55, 65, 81); font-weight: 400; font-style: normal; font-size: 16px;">Reduces breakouts|Supports skin barrier|Contains zinc &amp; biotin</span>
+       </div>
+       <div class="hidden" data-faq="true">
+        <span data-template-id="prod-9-faq" class="canva-text" style="color: rgb(55, 65, 81); font-weight: 400; font-style: normal; font-size: 16px;">How soon will I see results?::4-8 weeks for noticeable improvement.|Can I take with other supplements?::Yes, safe to combine with most supplements.</span>
+       </div>
+      </div><!-- Product 10 -->
+      <div class="prod-item visible product-card bg-white rounded-2xl border border-gray-100 overflow-hidden" data-cat="recovery" data-id="10" data-status="preorder">
+       <div class="relative overflow-hidden"><img data-template-id="prod-10-img" class="canva-image w-full h-52 object-cover card-img" loading="lazy" src="https://images.pexels.com/photos/14744701/pexels-photo-14744701.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=800" alt="Supplement bottle surrounded by oil capsules on white surface">
+        <div class="absolute top-3 right-3 px-3 py-1.5 rounded-full text-xs font-semibold text-white bg-amber-500">
+         Pre-Order
+        </div>
+       </div>
+       <div class="p-5">
+        <h3 data-template-id="prod-10-name" class="canva-text font-semibold text-gray-900" style="color: rgb(17, 24, 39); font-weight: 600; font-style: normal; font-size: 19px;">Ashwagandha KSM-66</h3>
+        <p data-template-id="prod-10-desc" class="canva-text text-sm text-gray-500 mt-1" style="color: rgb(107, 114, 128); font-weight: 400; font-style: normal; font-size: 16px;">Clinically studied adaptogen for stress and recovery.</p>
+        <p data-template-id="prod-10-price" class="canva-text text-lg font-bold text-red-600 mt-3" style="color: rgb(220, 38, 38); font-weight: 700; font-style: normal; font-size: 16px;">RM 65</p>
+        <p class="text-xs text-amber-600 mt-1 font-medium">Estimated availability via WhatsApp</p>
+        <div class="flex gap-2 mt-4"><button onclick="showProductDetail(10)" class="flex-1 border border-gray-200 text-sm font-medium py-2 rounded-full hover:bg-gray-50 transition-all">View Details</button> <button onclick="addToCart(10, event)" class="btn-premium flex-1 bg-red-600 text-white text-sm font-medium py-2 rounded-full hover:bg-red-700">Add to Cart</button>
+        </div>
+       </div>
+       <div class="hidden" data-benefits="true">
+        <span data-template-id="prod-10-benefits" class="canva-text" style="color: rgb(55, 65, 81); font-weight: 400; font-style: normal; font-size: 16px;">Reduces cortisol levels|Improves recovery|Enhances mental clarity</span>
+       </div>
+       <div class="hidden" data-faq="true">
+        <span data-template-id="prod-10-faq" class="canva-text" style="color: rgb(55, 65, 81); font-weight: 400; font-style: normal; font-size: 16px;">Is it safe long-term?::Yes, KSM-66 is clinically studied for extended use.|Morning or night?::Can be taken at either time.</span>
+       </div>
+      </div><!-- Product 11 -->
+      <div class="prod-item visible product-card bg-white rounded-2xl border border-gray-100 overflow-hidden" data-cat="fat-loss" data-id="11" data-status="ready">
+       <div class="relative overflow-hidden"><img data-template-id="prod-11-img" class="canva-image w-full h-52 object-cover card-img" loading="lazy" src="https://images.pexels.com/photos/29197739/pexels-photo-29197739.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=800" alt="Two weight management supplement bottles on a pink surface">
+        <div class="absolute top-3 right-3 px-3 py-1.5 rounded-full text-xs font-semibold text-white bg-emerald-500">
+         Ready Stock
+        </div>
+       </div>
+       <div class="p-5">
+        <h3 data-template-id="prod-11-name" class="canva-text font-semibold text-gray-900" style="color: rgb(17, 24, 39); font-weight: 600; font-style: normal; font-size: 19px;">Green Tea Extract</h3>
+        <p data-template-id="prod-11-desc" class="canva-text text-sm text-gray-500 mt-1" style="color: rgb(107, 114, 128); font-weight: 400; font-style: normal; font-size: 16px;">High EGCG content for metabolism support.</p>
+        <p data-template-id="prod-11-price" class="canva-text text-lg font-bold text-red-600 mt-3" style="color: rgb(220, 38, 38); font-weight: 700; font-style: normal; font-size: 16px;">RM 40</p>
+        <div class="flex gap-2 mt-4"><button onclick="showProductDetail(11)" class="flex-1 border border-gray-200 text-sm font-medium py-2 rounded-full hover:bg-gray-50 transition-all">View Details</button> <button onclick="addToCart(11, event)" class="btn-premium flex-1 bg-red-600 text-white text-sm font-medium py-2 rounded-full hover:bg-red-700">Add to Cart</button>
+        </div>
+       </div>
+       <div class="hidden" data-benefits="true">
+        <span data-template-id="prod-11-benefits" class="canva-text" style="color: rgb(55, 65, 81); font-weight: 400; font-style: normal; font-size: 16px;">Boosts metabolic rate|Rich in antioxidants|Gentle energy lift</span>
+       </div>
+       <div class="hidden" data-faq="true">
+        <span data-template-id="prod-11-faq" class="canva-text" style="color: rgb(55, 65, 81); font-weight: 400; font-style: normal; font-size: 16px;">Does it contain caffeine?::Small amount naturally present (approx 30mg).|Best taken with food?::Yes, to reduce any stomach sensitivity.</span>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div><!-- PRODUCT DETAIL -->
+   <div id="page-detail" class="page relative">
+    <div class="max-w-5xl mx-auto px-4 py-12 relative z-10"><button class="text-sm text-gray-500 hover:text-gray-800 mb-6 flex items-center gap-1" onclick="navigateTo('products')"><i data-lucide="arrow-left" class="w-4 h-4"></i> Back to Products</button>
+     <div class="grid md:grid-cols-2 gap-10">
+      <div>
+       <img id="detail-img" class="w-full rounded-2xl object-cover shadow-lg img-hover" alt="" loading="lazy">
+      </div>
+      <div>
+       <h1 id="detail-name" class="font-display text-3xl text-gray-900"></h1>
+       <p id="detail-price" class="text-2xl font-bold text-red-600 mt-2"></p>
+       <p id="detail-desc" class="text-gray-600 mt-4 leading-relaxed"></p>
+       <div id="detail-benefits" class="mt-6"></div>
+       <div class="flex gap-3 mt-8"><button id="detail-add-cart" class="btn-premium flex-1 bg-red-600 text-white py-3 rounded-full font-medium text-sm hover:bg-red-700">Add to Cart</button> <button id="detail-whatsapp" class="btn-premium flex-1 bg-green-600 text-white py-3 rounded-full font-medium text-sm hover:bg-green-700 flex items-center justify-center gap-2"><i data-lucide="message-circle" class="w-4 h-4"></i> WhatsApp</button>
+       </div>
+       <div id="detail-preorder-note" class="text-xs text-amber-600 font-medium mt-3 text-center hidden">
+        Estimated availability will be confirmed via WhatsApp
+       </div>
+       <div id="detail-faq" class="mt-8 border-t pt-6"></div>
+      </div>
+     </div>
+    </div>
+   </div><!-- VISUALIZER -->
+   <div id="page-visualizer" class="page relative">
+    <div class="max-w-3xl mx-auto px-4 py-12 relative z-10">
+     <h1 data-template-id="viz-title" class="canva-text font-display text-center mb-2 reveal" style="color: rgb(11, 31, 58); font-weight: 700; font-style: normal; font-size: 28px;">Injection Measurement Visualizer</h1>
+     <p data-template-id="viz-subtitle" class="canva-text text-center mb-10 opacity-70 reveal" style="transition-delay: 100ms; color: rgb(107, 114, 128); font-weight: 400; font-style: normal; font-size: 16px;">An educational tool to help visualize liquid measurement volumes</p>
+     <div class="flex justify-center mb-8 reveal scale-in" style="transition-delay:200ms">
+      <div id="syringe-container" class="syringe-wrap">
+       <svg viewBox="0 0 120 400" width="120" height="400" xmlns="http://www.w3.org/2000/svg"><rect x="35" y="60" width="50" height="280" rx="4" fill="#f0f4f8" stroke="#0b1f3a" stroke-width="2"></rect> <rect x="30" y="55" width="60" height="10" rx="3" fill="#0b1f3a"></rect> <rect x="57" y="340" width="6" height="50" fill="#9ca3af"></rect> <polygon points="57,390 63,390 60,400" fill="#9ca3af"></polygon> <g stroke="#0b1f3a" stroke-width="1" font-size="9" fill="#0b1f3a" font-family="DM Sans, sans-serif">
+         <line x1="35" y1="326" x2="45" y2="326"></line>
+         <text x="22" y="329" text-anchor="end">
+          0.1
+         </text>
+         <line x1="35" y1="300" x2="45" y2="300"></line>
+         <text x="22" y="303" text-anchor="end">
+          0.2
+         </text>
+         <line x1="35" y1="274" x2="48" y2="274"></line>
+         <text x="22" y="277" text-anchor="end">
+          0.3
+         </text>
+         <line x1="35" y1="248" x2="45" y2="248"></line>
+         <text x="22" y="251" text-anchor="end">
+          0.4
+         </text>
+         <line x1="35" y1="222" x2="48" y2="222"></line>
+         <text x="22" y="225" text-anchor="end">
+          0.5
+         </text>
+         <line x1="35" y1="196" x2="45" y2="196"></line>
+         <text x="22" y="199" text-anchor="end">
+          0.6
+         </text>
+         <line x1="35" y1="170" x2="48" y2="170"></line>
+         <text x="22" y="173" text-anchor="end">
+          0.7
+         </text>
+         <line x1="35" y1="144" x2="45" y2="144"></line>
+         <text x="22" y="147" text-anchor="end">
+          0.8
+         </text>
+         <line x1="35" y1="118" x2="48" y2="118"></line>
+         <text x="22" y="121" text-anchor="end">
+          0.9
+         </text>
+         <line x1="35" y1="92" x2="48" y2="92"></line>
+         <text x="22" y="95" text-anchor="end">
+          1.0
+         </text>
+         <line x1="35" y1="79" x2="45" y2="79"></line>
+         <text x="22" y="82" text-anchor="end">
+          1.5
+         </text>
+         <line x1="35" y1="66" x2="48" y2="66"></line>
+         <text x="22" y="69" text-anchor="end">
+          2.0
+         </text>
+        </g> <rect id="syringe-liquid" x="37" y="338" width="46" height="0" fill="#C41E3A" opacity="0.7" rx="2" style="transition: y 0.6s cubic-bezier(0.4,0,0.2,1), height 0.6s cubic-bezier(0.4,0,0.2,1);"></rect> <rect id="syringe-plunger" x="38" y="30" width="44" height="10" rx="3" fill="#0b1f3a" style="transition: y 0.6s cubic-bezier(0.4,0,0.2,1);"></rect> <rect x="55" y="10" width="10" height="25" rx="3" fill="#0b1f3a"></rect> <rect x="50" y="5" width="20" height="8" rx="4" fill="#0b1f3a"></rect>
+       </svg>
+      </div>
+     </div>
+     <div class="text-center mb-8">
+      <p class="text-sm text-gray-500 font-medium uppercase tracking-wider">Selected Volume</p>
+      <p id="viz-volume-display" class="text-4xl font-bold text-[#0b1f3a] mt-1">0.0 ml</p>
+     </div>
+     <div class="flex flex-wrap justify-center gap-2 mb-8 reveal" style="transition-delay:300ms"><button class="vol-btn px-3 py-2 rounded-lg text-sm font-medium border border-gray-200 hover:bg-gray-50" data-vol="0.1">0.1 ml</button> <button class="vol-btn px-3 py-2 rounded-lg text-sm font-medium border border-gray-200 hover:bg-gray-50" data-vol="0.2">0.2 ml</button> <button class="vol-btn px-3 py-2 rounded-lg text-sm font-medium border border-gray-200 hover:bg-gray-50" data-vol="0.3">0.3 ml</button> <button class="vol-btn px-3 py-2 rounded-lg text-sm font-medium border border-gray-200 hover:bg-gray-50" data-vol="0.4">0.4 ml</button> <button class="vol-btn px-3 py-2 rounded-lg text-sm font-medium border border-gray-200 hover:bg-gray-50" data-vol="0.5">0.5 ml</button> <button class="vol-btn px-3 py-2 rounded-lg text-sm font-medium border border-gray-200 hover:bg-gray-50" data-vol="0.6">0.6 ml</button> <button class="vol-btn px-3 py-2 rounded-lg text-sm font-medium border border-gray-200 hover:bg-gray-50" data-vol="0.7">0.7 ml</button> <button class="vol-btn px-3 py-2 rounded-lg text-sm font-medium border border-gray-200 hover:bg-gray-50" data-vol="0.8">0.8 ml</button> <button class="vol-btn px-3 py-2 rounded-lg text-sm font-medium border border-gray-200 hover:bg-gray-50" data-vol="0.9">0.9 ml</button> <button class="vol-btn px-3 py-2 rounded-lg text-sm font-medium border border-gray-200 hover:bg-gray-50" data-vol="1.0">1.0 ml</button> <button class="vol-btn px-3 py-2 rounded-lg text-sm font-medium border border-gray-200 hover:bg-gray-50" data-vol="1.5">1.5 ml</button> <button class="vol-btn px-3 py-2 rounded-lg text-sm font-medium border border-gray-200 hover:bg-gray-50" data-vol="2.0">2.0 ml</button>
+     </div>
+     <div class="flex justify-center gap-3 mb-10"><button data-template-id="viz-prev-btn" class="canva-button btn-premium px-5 py-2 rounded-full text-sm font-medium border border-gray-200" id="viz-prev" style="background: rgb(255, 255, 255); color: rgb(11, 31, 58); font-weight: 500; font-style: normal; font-size: 16px;">Previous Volume</button> <button data-template-id="viz-next-btn" class="canva-button btn-premium px-5 py-2 rounded-full text-sm font-medium border border-gray-200" id="viz-next" style="background: rgb(255, 255, 255); color: rgb(11, 31, 58); font-weight: 500; font-style: normal; font-size: 16px;">Next Volume</button> <button data-template-id="viz-reset-btn" class="canva-button btn-premium px-5 py-2 rounded-full text-sm font-medium" id="viz-reset" style="background: rgb(196, 30, 58); color: rgb(255, 255, 255); font-weight: 600; font-style: normal; font-size: 16px;">Reset</button>
+     </div>
+     <div class="bg-gray-50 border border-gray-200 rounded-xl p-5 reveal">
+      <p data-template-id="viz-disclaimer" class="canva-text text-xs leading-relaxed text-center" style="color: rgb(107, 114, 128); font-weight: 400; font-style: normal; font-size: 16px;">This visualizer is provided for educational purposes only and does not provide personalized dosing recommendations. Always follow the instructions supplied with the product and consult an appropriate healthcare professional if needed.</p>
+     </div>
+    </div>
+   </div><!-- CART -->
+   <div id="page-cart" class="page relative">
+    <div class="max-w-3xl mx-auto px-4 py-12 relative z-10">
+     <h1 data-template-id="cart-page-title" class="canva-text font-display mb-8 reveal" style="color: rgb(11, 31, 58); font-weight: 700; font-style: normal; font-size: 32px;">Shopping Cart</h1>
+     <div id="cart-items-list" class="space-y-4"></div>
+     <div id="cart-empty" class="text-center py-16">
+      <p data-template-id="cart-empty-text" class="canva-text text-lg opacity-50" style="color: rgb(156, 163, 175); font-weight: 400; font-style: normal; font-size: 16px;">Your cart is empty</p><button class="mt-4 text-red-600 font-medium text-sm btn-premium px-6 py-2 rounded-full border border-red-200" onclick="navigateTo('products')">Browse Products →</button>
+     </div>
+     <div id="cart-summary" class="hidden mt-8 border-t pt-6">
+      <div class="flex justify-between items-center mb-6"><span class="text-lg font-medium text-gray-700">Total</span> <span id="cart-total" class="text-2xl font-bold text-red-600">RM 0</span>
+      </div><button id="cart-checkout-btn" class="btn-premium w-full bg-green-600 text-white py-3 rounded-full font-medium hover:bg-green-700 flex items-center justify-center gap-2"><i data-lucide="message-circle" class="w-4 h-4"></i> Purchase via WhatsApp</button>
+     </div>
+    </div>
+   </div><!-- ABOUT -->
+   <div id="page-about" class="page relative">
+    <div class="max-w-4xl mx-auto px-4 py-12 relative z-10">
+     <h1 data-template-id="about-title" class="canva-text font-display text-center mb-6 reveal" style="color: rgb(11, 31, 58); font-weight: 700; font-style: normal; font-size: 32px;">About Delta Care</h1>
+     <div class="grid md:grid-cols-2 gap-10 items-center mt-10"><img data-template-id="about-image" class="canva-image w-full object-cover rounded-2xl img-hover reveal fade-left" loading="lazy" src="https://images.pexels.com/photos/3825527/pexels-photo-3825527.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=1280" alt="Scientist examining molecule model in laboratory">
+      <div class="reveal fade-right">
+       <p data-template-id="about-intro" class="canva-text leading-relaxed" style="color: rgb(55, 65, 81); font-weight: 400; font-style: normal; font-size: 16px;">Delta Care was founded with a singular vision: to make premium-grade wellness products accessible to Malaysians who refuse to compromise on quality. Our team of researchers and formulators work tirelessly to bring you supplements that are backed by science, free from unnecessary additives, and crafted with integrity.</p>
+      </div>
+     </div>
+     <div class="grid sm:grid-cols-3 gap-8 mt-16">
+      <div class="text-center reveal scale-in" style="--i:0">
+       <h3 data-template-id="about-vision-title" class="canva-text font-semibold mb-2" style="color: rgb(11, 31, 58); font-weight: 600; font-style: normal; font-size: 19px;">Our Vision</h3>
+       <p data-template-id="about-vision-text" class="canva-text text-sm opacity-70 leading-relaxed" style="color: rgb(107, 114, 128); font-weight: 400; font-style: normal; font-size: 16px;">To be Malaysia's most trusted premium wellness brand, empowering individuals to achieve their peak potential.</p>
+      </div>
+      <div class="text-center reveal scale-in" style="--i:1">
+       <h3 data-template-id="about-mission-title" class="canva-text font-semibold mb-2" style="color: rgb(11, 31, 58); font-weight: 600; font-style: normal; font-size: 19px;">Our Mission</h3>
+       <p data-template-id="about-mission-text" class="canva-text text-sm opacity-70 leading-relaxed" style="color: rgb(107, 114, 128); font-weight: 400; font-style: normal; font-size: 16px;">Deliver science-backed, transparently formulated supplements that set the standard for quality in Southeast Asia.</p>
+      </div>
+      <div class="text-center reveal scale-in" style="--i:2">
+       <h3 data-template-id="about-values-title" class="canva-text font-semibold mb-2" style="color: rgb(11, 31, 58); font-weight: 600; font-style: normal; font-size: 19px;">Our Values</h3>
+       <p data-template-id="about-values-text" class="canva-text text-sm opacity-70 leading-relaxed" style="color: rgb(107, 114, 128); font-weight: 400; font-style: normal; font-size: 16px;">Integrity, transparency, innovation, and an unwavering commitment to customer wellness guide everything we do.</p>
+      </div>
+     </div>
+     <hr class="my-16 border-gray-200">
+     <div class="text-center">
+      <h2 data-template-id="contact-title" class="canva-text font-display mb-6 reveal" style="color: rgb(11, 31, 58); font-weight: 700; font-style: normal; font-size: 32px;">Contact Us</h2>
+      <p data-template-id="contact-desc" class="canva-text opacity-70 mb-10 reveal" style="transition-delay: 100ms; color: rgb(107, 114, 128); font-weight: 400; font-style: normal; font-size: 16px;">Have questions about our products or need personalised recommendations? We're here to help.</p>
+      <div class="grid sm:grid-cols-3 gap-6">
+       <div class="p-6 rounded-2xl border border-gray-100 reveal scale-in" style="--i:0"><i data-lucide="mail" class="w-6 h-6 mx-auto text-red-600 mb-3"></i>
+        <p data-template-id="contact-email" class="canva-text text-sm font-medium" style="color: rgb(11, 31, 58); font-weight: 400; font-style: normal; font-size: 16px;">hello@deltacare.my</p>
+       </div>
+       <div class="p-6 rounded-2xl border border-gray-100 reveal scale-in" style="--i:1"><i data-lucide="phone" class="w-6 h-6 mx-auto text-red-600 mb-3"></i>
+        <p data-template-id="contact-phone" class="canva-text text-sm font-medium" style="color: rgb(11, 31, 58); font-weight: 400; font-style: normal; font-size: 16px;">+60 11-39771606</p>
+       </div>
+       <div class="p-6 rounded-2xl border border-gray-100 reveal scale-in" style="--i:2"><i data-lucide="message-circle" class="w-6 h-6 mx-auto text-red-600 mb-3"></i>
+        <p data-template-id="contact-whatsapp" class="canva-text text-sm font-medium" style="color: rgb(11, 31, 58); font-weight: 400; font-style: normal; font-size: 16px;">WhatsApp Us</p>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+  </div>
+  <footer data-template-id="footer-section" class="canva-footer py-8 mt-12" style="background: rgb(11, 31, 58);">
+   <p data-template-id="footer-text" class="canva-text text-center text-sm" style="color: rgb(156, 163, 175); font-weight: 400; font-style: normal; font-size: 16px;">© 2026 Delta Care. Premium wellness solutions made in Malaysia.</p>
+  </footer><button id="back-to-top" aria-label="Back to top"><i data-lucide="chevron-up" class="w-5 h-5"></i></button>
+  <div id="toast" class="toast"></div>
+  <script>
+window.addEventListener('load', () => { setTimeout(() => document.getElementById('loading-screen').classList.add('hidden'), 1200); });
+
+function updateBackgroundBlur() {
+  const bgLayer = document.querySelector('.global-bg-layer');
+  bgLayer.classList.toggle('light-blur', document.getElementById('page-home').classList.contains('active'));
+}
+
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); revealObserver.unobserve(e.target); } });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+function observeReveals() { document.querySelectorAll('.reveal:not(.visible)').forEach(el => revealObserver.observe(el)); }
+observeReveals();
+updateBackgroundBlur();
+
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+function navigateTo(page) {
+  const current = document.querySelector('.page.active');
+  if (current) { current.classList.remove('active'); current.classList.add('leaving'); setTimeout(() => { current.classList.remove('leaving'); showPage(page); }, 300); }
+  else showPage(page);
+}
+
+function showPage(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active','leaving'));
+  document.getElementById('page-' + page).classList.add('active');
+  document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+  document.querySelector(`.nav-link[data-page="${page}"]`)?.classList.add('active');
+  document.getElementById('mobile-menu').classList.add('hidden');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  if (page === 'cart') renderCart();
+  if (page === 'products') filterProducts();
+  setTimeout(observeReveals, 50);
+  updateBackgroundBlur();
+}
+
+document.querySelectorAll('[data-page]').forEach(btn => btn.addEventListener('click', () => navigateTo(btn.dataset.page)));
+document.getElementById('mobile-menu-btn').addEventListener('click', () => document.getElementById('mobile-menu').classList.toggle('hidden'));
+
+let currentCategory = 'all';
+
+function filterProducts() {
+  const items = document.querySelectorAll('#products-grid .prod-item');
+  items.forEach(item => {
+    const cat = item.dataset.cat;
+    item.classList.toggle('visible', currentCategory === 'all' || cat === currentCategory);
+  });
+}
+
+document.querySelectorAll('.cat-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentCategory = btn.dataset.cat;
+    const grid = document.getElementById('products-grid');
+    grid.classList.add('fading');
+    setTimeout(() => { filterProducts(); grid.classList.remove('fading'); }, 300);
+  });
+});
+
+// Read product data from DOM elements
+function getProductData(id) {
+  const card = document.querySelector(`.prod-item[data-id="${id}"]`);
+  if (!card) return null;
+  const name = card.querySelector(`[data-template-id="prod-${id}-name"]`)?.textContent || '';
+  const desc = card.querySelector(`[data-template-id="prod-${id}-desc"]`)?.textContent || '';
+  const priceText = card.querySelector(`[data-template-id="prod-${id}-price"]`)?.textContent || '';
+  const price = parseInt(priceText.replace(/[^0-9]/g, '')) || 0;
+  const benefits = card.querySelector(`[data-template-id="prod-${id}-benefits"]`)?.textContent || '';
+  const faq = card.querySelector(`[data-template-id="prod-${id}-faq"]`)?.textContent || '';
+  const status = card.dataset.status;
+  const img = card.querySelector(`[data-template-id="prod-${id}-img"]`);
+  const imgSrc = img ? img.src : '';
+  return { id, name, desc, price, benefits, faq, status, imgSrc };
+}
+
+function showProductDetail(id) {
+  const p = getProductData(id);
+  if (!p) return;
+  document.getElementById('detail-img').src = p.imgSrc;
+  document.getElementById('detail-img').alt = p.name;
+  document.getElementById('detail-name').textContent = p.name;
+  document.getElementById('detail-price').textContent = p.price ? `RM ${p.price}` : '';
+  document.getElementById('detail-desc').textContent = p.desc;
+
+  // Benefits
+  const benefitsList = p.benefits.split('|').filter(b => b.trim());
+  const statusLabel = p.status === 'ready' ? 'Ready Stock' : p.status === 'preorder' ? 'Pre-Order' : 'Out of Stock';
+  const statusBg = p.status === 'ready' ? '#10b981' : p.status === 'preorder' ? '#f59e0b' : '#ef4444';
+  document.getElementById('detail-benefits').innerHTML = `<div class="inline-block px-3 py-1.5 rounded-full text-xs font-semibold text-white mb-4" style="background-color:${statusBg}">${statusLabel}</div><h3 class="font-semibold text-gray-900 mb-3">Benefits</h3><ul class="space-y-2">${benefitsList.map(b => `<li class="flex items-start gap-2 text-sm text-gray-600"><i data-lucide="check-circle" class="w-4 h-4 text-green-500 mt-0.5 shrink-0"></i>${b.trim()}</li>`).join('')}</ul>`;
+
+  // FAQ
+  const faqPairs = p.faq.split('|').filter(f => f.trim());
+  document.getElementById('detail-faq').innerHTML = faqPairs.length ? `<h3 class="font-semibold text-gray-900 mb-3">FAQ</h3>${faqPairs.map(pair => { const [q, a] = pair.split('::'); return `<div class="mb-3"><p class="text-sm font-medium text-gray-800">${(q||'').trim()}</p><p class="text-sm text-gray-500 mt-1">${(a||'').trim()}</p></div>`; }).join('')}` : '';
+
+  const addBtn = document.getElementById('detail-add-cart');
+  const preorderNote = document.getElementById('detail-preorder-note');
+  if (p.status === 'outofstock') { addBtn.textContent = 'Currently Unavailable'; addBtn.disabled = true; addBtn.className = 'btn-premium flex-1 bg-gray-400 text-white py-3 rounded-full font-medium text-sm cursor-not-allowed'; preorderNote.classList.add('hidden'); }
+  else if (p.status === 'preorder') { addBtn.textContent = 'Add to Cart (Pre-Order)'; addBtn.disabled = false; addBtn.className = 'btn-premium flex-1 bg-red-600 text-white py-3 rounded-full font-medium text-sm hover:bg-red-700'; preorderNote.classList.remove('hidden'); }
+  else { addBtn.textContent = 'Add to Cart'; addBtn.disabled = false; addBtn.className = 'btn-premium flex-1 bg-red-600 text-white py-3 rounded-full font-medium text-sm hover:bg-red-700'; preorderNote.classList.add('hidden'); }
+  addBtn.onclick = (e) => addToCart(id, e);
+  document.getElementById('detail-whatsapp').onclick = () => { window.open(`https://wa.me/60123456789?text=${encodeURIComponent(`Hi Delta Care! I'm interested in ${p.name} (RM ${p.price}). Is it available?`)}`, '_blank'); };
+  navigateTo('detail');
+  setTimeout(() => lucide.createIcons(), 100);
+}
+
+function addToCart(id, event) {
+  const p = getProductData(id);
+  if (!p || p.status === 'outofstock') { showToast('This product is currently unavailable'); return; }
+  const existing = cart.find(i => i.id === id);
+  if (existing) existing.qty++; else cart.push({ id, name: p.name, price: p.price, qty: 1 });
+  localStorage.setItem("cart", JSON.stringify(cart));
+  updateCartBadge();
+  showToast(`${p.name}${p.status === 'preorder' ? ' (Pre-Order)' : ''} added to cart`);
+  if (event && event.target) {
+    const btn = event.target; const rect = btn.getBoundingClientRect();
+    const cartBtn = document.getElementById('nav-cart-btn'); const cartRect = cartBtn.getBoundingClientRect();
+    const fly = document.createElement('div');
+    fly.className = 'fly-item';
+    fly.style.cssText = `left:${rect.left}px;top:${rect.top}px;width:40px;height:40px;background:#C41E3A;border-radius:50%;opacity:0.8;`;
+    document.body.appendChild(fly);
+    requestAnimationFrame(() => { fly.style.left = cartRect.left + cartRect.width/2 - 20 + 'px'; fly.style.top = cartRect.top + 'px'; fly.style.width = '12px'; fly.style.height = '12px'; fly.style.opacity = '0'; });
+    setTimeout(() => fly.remove(), 700);
+    setTimeout(() => { cartBtn.classList.add('cart-shake'); setTimeout(() => cartBtn.classList.remove('cart-shake'), 400); }, 500);
+  }
+}
+
+function updateCartBadge() {
+  const count = cart.reduce((s, i) => s + i.qty, 0);
+  const badge = document.getElementById('nav-cart-badge');
+  badge.textContent = count;
+  badge.classList.toggle('hidden', count === 0);
+  badge.classList.add('badge-bounce');
+  setTimeout(() => badge.classList.remove('badge-bounce'), 400);
+}
+
+function showToast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2000); }
+
+function renderCart() {
+  const list = document.getElementById('cart-items-list');
+  const empty = document.getElementById('cart-empty');
+  const summary = document.getElementById('cart-summary');
+  if (cart.length === 0) { list.innerHTML = ''; empty.classList.remove('hidden'); summary.classList.add('hidden'); return; }
+  empty.classList.add('hidden'); summary.classList.remove('hidden');
+  list.innerHTML = cart.map((item, i) => `
+    <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl" style="animation: pageIn 0.3s ease ${i*60}ms both">
+      <div><p class="font-medium text-gray-900">${item.name}</p><p class="text-sm text-gray-500">RM ${item.price} × ${item.qty}</p></div>
+      <div class="flex items-center gap-3">
+        <button onclick="changeQty(${i},-1)" class="w-8 h-8 rounded-full bg-white border border-gray-200 text-sm font-bold hover:bg-gray-100">−</button>
+        <span class="text-sm font-medium w-4 text-center">${item.qty}</span>
+        <button onclick="changeQty(${i},1)" class="w-8 h-8 rounded-full bg-white border border-gray-200 text-sm font-bold hover:bg-gray-100">+</button>
+        <button onclick="removeFromCart(${i})" class="ml-2 text-red-400 hover:text-red-600"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+      </div>
+    </div>`).join('');
+  document.getElementById('cart-total').textContent = `RM ${cart.reduce((s, i) => s + i.price * i.qty, 0)}`;
+  lucide.createIcons();
+}
+
+window.changeQty = (i, d) => { cart[i].qty += d; if (cart[i].qty <= 0) cart.splice(i, 1); updateCartBadge(); renderCart(); };
+window.removeFromCart = (i) => { cart.splice(i, 1); updateCartBadge(); renderCart(); };
+
+document.getElementById('cart-checkout-btn').addEventListener('click', () => {
+  if (!cart.length) return;
+  const lines = cart.map(i => `• ${i.name} x${i.qty} — RM${i.price * i.qty}`);
+  const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+  window.open(`https://wa.me/60123456789?text=${encodeURIComponent(`Hello Delta Care,\n\nI would like to order:\n\n${lines.join('\n')}\n\nTotal: RM ${total}\n\nPlease confirm availability.`)}`, '_blank');
+});
+
+// Ripple effect
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('.btn-premium');
+  if (!btn) return;
+  const ripple = document.createElement('span'); ripple.className = 'ripple';
+  const rect = btn.getBoundingClientRect(); const size = Math.max(rect.width, rect.height);
+  ripple.style.width = ripple.style.height = size + 'px';
+  ripple.style.left = (e.clientX - rect.left - size/2) + 'px';
+  ripple.style.top = (e.clientY - rect.top - size/2) + 'px';
+  btn.appendChild(ripple); setTimeout(() => ripple.remove(), 600);
+});
+
+// Visualizer
+const volumes = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.5, 2.0];
+let currentVolIdx = 0;
+function setVolume(ml) { const idx = volumes.indexOf(ml); if (idx === -1) return; currentVolIdx = idx; updateSyringe(); }
+function updateSyringe() {
+  const ml = volumes[currentVolIdx]; const maxH = 272; const fillH = (ml / 2.0) * maxH;
+  document.getElementById('syringe-liquid').setAttribute('height', fillH);
+  document.getElementById('syringe-liquid').setAttribute('y', 338 - fillH);
+  document.getElementById('syringe-plunger').setAttribute('y', 338 - fillH - 10);
+  document.getElementById('viz-volume-display').textContent = ml === 0 ? '0.0 ml' : ml.toFixed(1) + ' ml';
+  document.querySelectorAll('.vol-btn').forEach(b => b.classList.toggle('active', parseFloat(b.dataset.vol) === ml));
+  const container = document.getElementById('syringe-container');
+  container.classList.add('zoom'); setTimeout(() => container.classList.remove('zoom'), 400);
+}
+document.querySelectorAll('.vol-btn').forEach(btn => btn.addEventListener('click', () => setVolume(parseFloat(btn.dataset.vol))));
+document.getElementById('viz-prev').addEventListener('click', () => { if (currentVolIdx > 0) { currentVolIdx--; updateSyringe(); } });
+document.getElementById('viz-next').addEventListener('click', () => { if (currentVolIdx < volumes.length - 1) { currentVolIdx++; updateSyringe(); } });
+document.getElementById('viz-reset').addEventListener('click', () => { currentVolIdx = 0; updateSyringe(); });
+
+// Back to top
+const btt = document.getElementById('back-to-top');
+window.addEventListener('scroll', () => btt.classList.toggle('visible', window.scrollY > 400));
+btt.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+// Parallax
+document.addEventListener('mousemove', (e) => {
+  const hero = document.querySelector('.hero-parallax');
+  if (!hero || window.innerWidth < 768) return;
+  const x = (e.clientX / window.innerWidth - 0.5) * 8;
+  const y = (e.clientY / window.innerHeight - 0.5) * 8;
+  hero.style.transform = `translate(${x}px, ${y}px)`;
+});
+
+lucide.createIcons();
+window.addEventListener('load', () => {
+  updateCartBadge();
+});
+
+</script>
+ 
+</body></html>
