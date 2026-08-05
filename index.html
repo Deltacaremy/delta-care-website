@@ -92,16 +92,46 @@
   </div>
   <nav class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100">
    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-    <div class="flex items-center gap-2 cursor-pointer" onclick="navigateTo('home')"><img src="image/dc2-logo.png" 
-        alt="Delta Care Logo"
-        class="h-14 w-auto"></span>
+    <div class="flex items-center gap-2 cursor-pointer" onclick="navigateTo('home')">
+      <img src="image/dc2-logo.png" alt="Delta Care Logo" class="h-14 w-auto">
     </div>
-    <div class="hidden md:flex items-center gap-1"><button class="nav-link active text-sm font-medium px-3 py-2" data-page="home">Home</button> <button class="nav-link text-sm font-medium px-3 py-2" data-page="products">Products</button> <button class="nav-link text-sm font-medium px-3 py-2" data-page="visualizer">Visualizer</button> <button class="nav-link text-sm font-medium px-3 py-2" data-page="about">About Us</button> <button class="nav-link text-sm font-medium px-3 py-2 relative" data-page="cart" id="nav-cart-btn">Cart <span id="nav-cart-badge" class="hidden absolute -top-1 -right-1 bg-red-600 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">0</span></button>
-    </div><button id="mobile-menu-btn" class="md:hidden p-2"><i data-lucide="menu" class="w-5 h-5"></i></button>
+    
+    <!-- Menu Desktop -->
+    <div class="hidden md:flex items-center gap-1">
+      <button class="nav-link active text-sm font-medium px-3 py-2" data-page="home">Home</button> 
+      <button class="nav-link text-sm font-medium px-3 py-2" data-page="products">Products</button> 
+      <button class="nav-link text-sm font-medium px-3 py-2" data-page="visualizer">Visualizer</button> 
+      <button class="nav-link text-sm font-medium px-3 py-2" data-page="about">About Us</button> 
+      <button class="relative p-2 text-gray-700 hover:text-red-600 transition-colors ml-2" data-page="cart" id="nav-cart-btn">
+        <i data-lucide="shopping-cart" class="w-6 h-6"></i>
+        <span id="nav-cart-badge" class="hidden absolute top-0 right-0 bg-red-600 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">0</span>
+      </button>    
+    </div>
+
+    <!-- Ikon Cart & Menu Hamburger (Skrin Phone) -->
+    <div class="flex items-center gap-2 md:hidden">
+      <!-- Ikon Cart Phone Khas (Ada Badge Nombor) -->
+      <button class="relative p-2 text-gray-700" data-page="cart" id="mobile-cart-btn">
+        <i data-lucide="shopping-cart" class="w-6 h-6"></i>
+        <span id="mobile-cart-badge" class="hidden absolute top-0 right-0 bg-red-600 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">0</span>
+      </button>
+
+      <!-- Butang Menu Hamburger -->
+      <button id="mobile-menu-btn" class="p-2"><i data-lucide="menu" class="w-6 h-6"></i></button>
+    </div>
    </div>
-   <div id="mobile-menu" class="hidden md:hidden border-t border-gray-100 bg-white px-4 py-3 space-y-2"><button class="block w-full text-left text-sm font-medium py-2" data-page="home">Home</button> <button class="block w-full text-left text-sm font-medium py-2" data-page="products">Products</button> <button class="block w-full text-left text-sm font-medium py-2" data-page="visualizer">Visualizer</button> <button class="block w-full text-left text-sm font-medium py-2" data-page="about">About Us</button> <button class="block w-full text-left text-sm font-medium py-2" data-page="cart">Cart</button>
+
+   <!-- Dropdown Menu Phone -->
+   <div id="mobile-menu" class="hidden md:hidden border-t border-gray-100 bg-white px-4 py-3 space-y-2">
+    <button class="block w-full text-left text-sm font-medium py-2" data-page="home">Home</button> 
+    <button class="block w-full text-left text-sm font-medium py-2" data-page="products">Products</button> 
+    <button class="block w-full text-left text-sm font-medium py-2" data-page="visualizer">Visualizer</button> 
+    <button class="block w-full text-left text-sm font-medium py-2" data-page="about">About Us</button> 
+    <button class="block w-full text-left text-sm font-medium py-2 relative flex items-center justify-between" data-page="cart">
+      <span>Cart</span>
+      <span id="mobile-menu-cart-badge" class="hidden bg-red-600 text-white text-xs px-2 py-0.5 rounded-full">0</span>
+    </button>
    </div>
-  </nav>
   <div class="pt-20"><!-- HOME -->
    <div id="page-home" class="page active relative">
     <div class="max-w-7xl mx-auto px-4 py-20 md:py-28 grid md:grid-cols-2 gap-12 items-center relative z-10">
@@ -115,8 +145,8 @@
      </div>
     </div>
     <section class="max-w-4xl mx-auto px-4 py-16 text-center">
-     <h2 data-template-id="brand-intro-title" class="canva-text font-display reveal hero-entrance-brand" style="color: rgb(11, 31, 58); font-weight: 700; font-style: normal; font-size: 40px;">Welcome to Delta Care</h2>
-     <p data-template-id="brand-intro-text" class="canva-text mt-4 leading-relaxed max-w-2xl mx-auto reveal hero-entrance-brand" style="transition-delay: 100ms; color: rgb(75, 85, 99); font-weight: 400; font-style: normal; font-size: 16px;">At Delta Care, we believe premium health shouldn't be a luxury. Our mission is to deliver science-backed, transparently formulated supplements that empower you to perform at your best — every single day.</p>
+     <h2 data-template-id="brand-intro-title" class="canva-text font-display reveal hero-entrance-brand" style="color: rgb(11, 31, 58); font-weight: 700; font-style: normal; font-size: 40px;">Welcome to DeltaCare</h2>
+     <p data-template-id="brand-intro-text" class="canva-text mt-4 leading-relaxed max-w-2xl mx-auto reveal hero-entrance-brand" style="transition-delay: 100ms; color: rgb(75, 85, 99); font-weight: 400; font-style: normal; font-size: 16px;">At DeltaCare, we believe premium health shouldn't be a luxury. Our mission is to deliver science-backed, transparently formulated supplements that empower you to perform at your best — every single day.</p>
     </section>
     <section class="bg-gray-50 py-16 pattern-dots">
      <div class="max-w-7xl mx-auto px-4">
@@ -162,7 +192,7 @@
      </div>
     </section>
     <section class="max-w-7xl mx-auto px-4 py-16 pattern-subtle">
-     <h2 data-template-id="why-heading" class="canva-text font-display text-center mb-12 reveal" style="color: rgb(11, 31, 58); font-weight: 700; font-style: normal; font-size: 24px;">Why Choose Delta Care</h2>
+     <h2 data-template-id="why-heading" class="canva-text font-display text-center mb-12 reveal" style="color: rgb(11, 31, 58); font-weight: 700; font-style: normal; font-size: 24px;">Why Choose DeltaCare</h2>
      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
       <div data-template-id="why-card-1" class="canva-card text-center p-6 rounded-2xl border border-gray-100 reveal scale-in" style="--i: 0; background: rgb(255, 255, 255);">
        <div class="w-12 h-12 mx-auto mb-4 bg-red-50 rounded-full flex items-center justify-center">
@@ -559,10 +589,10 @@
    </div><!-- ABOUT -->
    <div id="page-about" class="page relative">
     <div class="max-w-4xl mx-auto px-4 py-12 relative z-10">
-     <h1 data-template-id="about-title" class="canva-text font-display text-center mb-6 reveal" style="color: rgb(11, 31, 58); font-weight: 700; font-style: normal; font-size: 32px;">About Delta Care</h1>
+     <h1 data-template-id="about-title" class="canva-text font-display text-center mb-6 reveal" style="color: rgb(11, 31, 58); font-weight: 700; font-style: normal; font-size: 32px;">About DeltaCare</h1>
      <div class="grid md:grid-cols-2 gap-10 items-center mt-10"><img data-template-id="about-image" class="canva-image w-full object-cover rounded-2xl img-hover reveal fade-left" loading="lazy" src="https://images.pexels.com/photos/3825527/pexels-photo-3825527.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=1280" alt="Scientist examining molecule model in laboratory">
       <div class="reveal fade-right">
-       <p data-template-id="about-intro" class="canva-text leading-relaxed" style="color: rgb(55, 65, 81); font-weight: 400; font-style: normal; font-size: 16px;">Delta Care was founded with a singular vision: to make premium-grade wellness products accessible to Malaysians who refuse to compromise on quality. Our team of researchers and formulators work tirelessly to bring you supplements that are backed by science, free from unnecessary additives, and crafted with integrity.</p>
+       <p data-template-id="about-intro" class="canva-text leading-relaxed" style="color: rgb(55, 65, 81); font-weight: 400; font-style: normal; font-size: 16px;">DeltaCare was founded with a singular vision: to make premium-grade wellness products accessible to Malaysians who refuse to compromise on quality. Our team of researchers and formulators work tirelessly to bring you supplements that are backed by science, free from unnecessary additives, and crafted with integrity.</p>
       </div>
      </div>
      <div class="grid sm:grid-cols-3 gap-8 mt-16">
@@ -585,12 +615,12 @@
       <p data-template-id="contact-desc" class="canva-text opacity-70 mb-10 reveal" style="transition-delay: 100ms; color: rgb(107, 114, 128); font-weight: 400; font-style: normal; font-size: 16px;">Have questions about our products or need personalised recommendations? We're here to help.</p>
       <div class="grid sm:grid-cols-3 gap-6">
        <div class="p-6 rounded-2xl border border-gray-100 reveal scale-in" style="--i:0"><i data-lucide="mail" class="w-6 h-6 mx-auto text-red-600 mb-3"></i>
-        <p data-template-id="contact-email" class="canva-text text-sm font-medium" style="color: rgb(11, 31, 58); font-weight: 400; font-style: normal; font-size: 16px;">hello@deltacare.my</p>
+        <p data-template-id="contact-email" class="canva-text text-sm font-medium" style="color: rgb(11, 31, 58); font-weight: 400; font-style: normal; font-size: 16px;">deltacaremy@gmail.com</p>
        </div>
        <div class="p-6 rounded-2xl border border-gray-100 reveal scale-in" style="--i:1"><i data-lucide="phone" class="w-6 h-6 mx-auto text-red-600 mb-3"></i>
         <p data-template-id="contact-phone" class="canva-text text-sm font-medium" style="color: rgb(11, 31, 58); font-weight: 400; font-style: normal; font-size: 16px;">+60 11-39771606</p>
        </div>
-       <div class="p-6 rounded-2xl border border-gray-100 reveal scale-in" style="--i:2"><i data-lucide="message-circle" class="w-6 h-6 mx-auto text-red-600 mb-3"></i>
+       <div onclick="window.open('https://wa.me/601139771606?text=Hi%20DeltaCare,%20saya%20ada%20pertanyaan.', '_blank')" class="p-6 rounded-2xl border border-gray-100 reveal scale-in" style="--i:2"><i data-lucide="message-circle" class="w-6 h-6 mx-auto text-red-600 mb-3"></i>
         <p data-template-id="contact-whatsapp" class="canva-text text-sm font-medium" style="color: rgb(11, 31, 58); font-weight: 400; font-style: normal; font-size: 16px;">WhatsApp Us</p>
        </div>
       </div>
@@ -599,7 +629,7 @@
    </div>
   </div>
   <footer data-template-id="footer-section" class="canva-footer py-8 mt-12" style="background: rgb(11, 31, 58);">
-   <p data-template-id="footer-text" class="canva-text text-center text-sm" style="color: rgb(156, 163, 175); font-weight: 400; font-style: normal; font-size: 16px;">© 2026 Delta Care. Premium wellness solutions made in Malaysia.</p>
+   <p data-template-id="footer-text" class="canva-text text-center text-sm" style="color: rgb(156, 163, 175); font-weight: 400; font-style: normal; font-size: 16px;">© 2026 DeltaCare. Premium Pharmaceutical Grade.</p>
   </footer><button id="back-to-top" aria-label="Back to top"><i data-lucide="chevron-up" class="w-5 h-5"></i></button>
   <div id="toast" class="toast"></div>
   <script>
@@ -704,7 +734,7 @@ function showProductDetail(id) {
   else if (p.status === 'preorder') { addBtn.textContent = 'Add to Cart (Pre-Order)'; addBtn.disabled = false; addBtn.className = 'btn-premium flex-1 bg-red-600 text-white py-3 rounded-full font-medium text-sm hover:bg-red-700'; preorderNote.classList.remove('hidden'); }
   else { addBtn.textContent = 'Add to Cart'; addBtn.disabled = false; addBtn.className = 'btn-premium flex-1 bg-red-600 text-white py-3 rounded-full font-medium text-sm hover:bg-red-700'; preorderNote.classList.add('hidden'); }
   addBtn.onclick = (e) => addToCart(id, e);
-  document.getElementById('detail-whatsapp').onclick = () => { window.open(`https://wa.me/60123456789?text=${encodeURIComponent(`Hi Delta Care! I'm interested in ${p.name} (RM ${p.price}). Is it available?`)}`, '_blank'); };
+  document.getElementById('detail-whatsapp').onclick = () => { window.open(`https://wa.me/601139771606?text=${encodeURIComponent(`Hi DeltaCare! I'm interested in ${p.name} (RM ${p.price}). Is it available?`)}`, '_blank'); };
   navigateTo('detail');
   setTimeout(() => lucide.createIcons(), 100);
 }
@@ -732,11 +762,31 @@ function addToCart(id, event) {
 
 function updateCartBadge() {
   const count = cart.reduce((s, i) => s + i.qty, 0);
-  const badge = document.getElementById('nav-cart-badge');
-  badge.textContent = count;
-  badge.classList.toggle('hidden', count === 0);
-  badge.classList.add('badge-bounce');
-  setTimeout(() => badge.classList.remove('badge-bounce'), 400);
+  
+  // 1. Badge Desktop
+  const badgeDesktop = document.getElementById('nav-cart-badge');
+  if (badgeDesktop) {
+    badgeDesktop.textContent = count;
+    badgeDesktop.classList.toggle('hidden', count === 0);
+    badgeDesktop.classList.add('badge-bounce');
+    setTimeout(() => badgeDesktop.classList.remove('badge-bounce'), 400);
+  }
+
+  // 2. Badge Mobile (Ikon Troli Atas) - Tambah animasi bounce & setTimeout
+  const badgeMobile = document.getElementById('mobile-cart-badge');
+  if (badgeMobile) {
+    badgeMobile.textContent = count;
+    badgeMobile.classList.toggle('hidden', count === 0);
+    badgeMobile.classList.add('badge-bounce');
+    setTimeout(() => badgeMobile.classList.remove('badge-bounce'), 400);
+  }
+
+  // 3. Badge Mobile (Dalam Menu Hamburger)
+  const badgeMobileMenu = document.getElementById('mobile-menu-cart-badge');
+  if (badgeMobileMenu) {
+    badgeMobileMenu.textContent = count;
+    badgeMobileMenu.classList.toggle('hidden', count === 0);
+  }
 }
 
 function showToast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2000); }
@@ -768,7 +818,7 @@ document.getElementById('cart-checkout-btn').addEventListener('click', () => {
   if (!cart.length) return;
   const lines = cart.map(i => `• ${i.name} x${i.qty} — RM${i.price * i.qty}`);
   const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
-  window.open(`https://wa.me/60123456789?text=${encodeURIComponent(`Hello Delta Care,\n\nI would like to order:\n\n${lines.join('\n')}\n\nTotal: RM ${total}\n\nPlease confirm availability.`)}`, '_blank');
+  window.open(`https://wa.me/601139771606?text=${encodeURIComponent(`Hello DeltaCare,\n\nI would like to order:\n\n${lines.join('\n')}\n\nTotal: RM ${total}\n\nPlease confirm availability.`)}`, '_blank');
 });
 
 // Ripple effect
