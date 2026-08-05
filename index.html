@@ -71,8 +71,8 @@
     .pattern-geometric { background-image: linear-gradient(45deg, rgba(196,30,58,0.02) 25%, transparent 25%), linear-gradient(-45deg, rgba(196,30,58,0.02) 25%, transparent 25%), linear-gradient(45deg, transparent 75%, rgba(196,30,58,0.02) 75%), linear-gradient(-45deg, transparent 75%, rgba(196,30,58,0.02) 75%); background-size: 30px 30px; }
     .pattern-subtle { background-image: radial-gradient(circle at 20% 50%, rgba(196,30,58,0.015) 1px, transparent 1px), radial-gradient(circle at 80% 80%, rgba(196,30,58,0.015) 1px, transparent 1px); background-size: 50px 50px; }
     .global-bg-layer { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 0; pointer-events: none; }
-    .global-bg-layer img { width: 100%; height: 100%; object-fit: cover; filter: blur(22px) contrast(0.82); opacity: 0.48; transition: filter 0.5s ease; }
-    .global-bg-layer.light-blur img { filter: blur(6px) contrast(0.82); }
+    .global-bg-layer img { width: 100%; height: 100%; object-fit: cover; filter: blur(5px) contrast(0.82); opacity: 0.48; transition: filter 0.5s ease; }
+    .global-bg-layer.light-blur img { filter: blur(1px) contrast(0.82); }
     .global-bg-overlay { position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,255,255,0.8) 0%, rgba(242,246,255,0.65) 100%); z-index: 1; }
     .pt-20 { position: relative; z-index: 10; }
     .prod-item { display: none; }
@@ -80,67 +80,111 @@
   </style>
 </head>
  <body data-template-id="__page-root" class="w-full min-h-screen" style="background: rgb(242, 246, 255);">
-  <div class="global-bg-layer"><img data-template-id="global-bg-image" class="canva-image" loading="lazy" src="https://images.pexels.com/photos/2280571/pexels-photo-2280571.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=1920" alt="Scientist in gloves analyzing blue liquid in a laboratory setting">
-   <div class="global-bg-overlay"></div>
+  <!-- Layer Background Blur -->
+  <div class="global-bg-layer">
+    <img data-template-id="global-bg-image" class="canva-image" loading="lazy" src="https://images.pexels.com/photos/2280571/pexels-photo-2280571.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=1920" alt="Scientist in gloves analyzing blue liquid in a laboratory setting">
+    <div class="global-bg-overlay"></div>
   </div>
+
+  <!-- Loading Screen -->
   <div id="loading-screen">
-   <div class="loader-logo flex flex-col items-center gap-3"><div data-template-id="brand-logo" class="font-display text-4xl font-bold" style="color:#0b1f3a">Delta<span style="color:#C41E3A">Care</span></div>
-    <div class="w-12 h-0.5 bg-gray-200 rounded overflow-hidden">
-     <div class="h-full bg-red-600 animate-pulse" style="width:60%"></div>
+    <div class="loader-logo flex flex-col items-center gap-3">
+      <div data-template-id="brand-logo" class="font-display text-4xl font-bold" style="color:#0b1f3a">Delta<span style="color:#C41E3A">Care</span></div>
+      <div class="w-12 h-0.5 bg-gray-200 rounded overflow-hidden">
+        <div class="h-full bg-red-600 animate-pulse" style="width:60%"></div>
+      </div>
     </div>
-   </div>
   </div>
-  <nav class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100">
+
+  <!-- Navigation Bar -->
+ <!-- Navigation Bar (Header Biru Gelap + Logo Filter Putih) -->
+  <nav class="fixed top-0 left-0 right-0 z-50 bg-[#0b1f3a] border-b border-white/10 shadow-lg transition-all duration-300">
    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+    
+    <!-- Logo (Kesan CSS brightness-0 invert menjadikan logo putih bersih) -->
     <div class="flex items-center gap-2 cursor-pointer" onclick="navigateTo('home')">
-      <img src="image/dc2-logo.png" alt="Delta Care Logo" class="h-14 w-auto">
+      <img src="image/dc2-logo.png" alt="Delta Care Logo" class="h-14 w-auto brightness-0 invert">
     </div>
     
     <!-- Menu Desktop -->
-    <div class="hidden md:flex items-center gap-1">
-      <button class="nav-link active text-sm font-medium px-3 py-2" data-page="home">Home</button> 
-      <button class="nav-link text-sm font-medium px-3 py-2" data-page="products">Products</button> 
-      <button class="nav-link text-sm font-medium px-3 py-2" data-page="visualizer">Visualizer</button> 
-      <button class="nav-link text-sm font-medium px-3 py-2" data-page="about">About Us</button> 
-      <button class="relative p-2 text-gray-700 hover:text-red-600 transition-colors ml-2" data-page="cart" id="nav-cart-btn">
-        <i data-lucide="shopping-cart" class="w-6 h-6"></i>
-        <span id="nav-cart-badge" class="hidden absolute top-0 right-0 bg-red-600 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">0</span>
-      </button>    
-    </div>
+    <div class="hidden md:flex items-center gap-2">
+      <button class="nav-link active text-white hover:text-red-400 text-sm font-medium px-3 py-2" data-page="home">Home</button> 
+      <button class="nav-link text-gray-200 hover:text-red-400 text-sm font-medium px-3 py-2" data-page="products">Products</button> 
+      <button class="nav-link text-gray-200 hover:text-red-400 text-sm font-medium px-3 py-2" data-page="visualizer">Visualizer</button> 
+      <button class="nav-link text-gray-200 hover:text-red-400 text-sm font-medium px-3 py-2" data-page="about">About Us</button> 
+      
+      <!-- Ikon Troli Desktop -->
+      <button class="relative inline-flex items-center justify-center p-2 text-white hover:text-red-400 transition-colors ml-2 z-10" data-page="cart" id="nav-cart-btn">
+     <!-- SVG Troli (Kalis Refresh & Direct Render) -->
+     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6">
+        <circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/>
+        <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>
+     </svg>
+  
+      <span id="nav-cart-badge" class="hidden absolute -top-1 -right-1 bg-red-600 text-white text-[11px] font-bold w-5 h-5 rounded-full flex items-center justify-center shadow-md z-20 pointer-events-none">0</span>
+      </button>
 
     <!-- Ikon Cart & Menu Hamburger (Skrin Phone) -->
     <div class="flex items-center gap-2 md:hidden">
-      <!-- Ikon Cart Phone Khas (Ada Badge Nombor) -->
-      <button class="relative p-2 text-gray-700" data-page="cart" id="mobile-cart-btn">
-        <i data-lucide="shopping-cart" class="w-6 h-6"></i>
-        <span id="mobile-cart-badge" class="hidden absolute top-0 right-0 bg-red-600 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">0</span>
-      </button>
+      <!-- Ikon Cart Phone -->
+      <button class="relative inline-flex items-center justify-center p-2 text-white z-10" data-page="cart" id="mobile-cart-btn">
+  <!-- SVG Troli (Kalis Refresh & Direct Render) -->
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6">
+    <circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/>
+    <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>
+  </svg>
+  
+  <span id="mobile-cart-badge" class="hidden absolute -top-1 -right-1 bg-red-600 text-white text-[11px] font-bold w-5 h-5 rounded-full flex items-center justify-center shadow-md z-20 pointer-events-none">0</span>
+</button>
 
       <!-- Butang Menu Hamburger -->
-      <button id="mobile-menu-btn" class="p-2"><i data-lucide="menu" class="w-6 h-6"></i></button>
+      <button id="mobile-menu-btn" class="p-2 text-white"><i data-lucide="menu" class="w-6 h-6"></i></button>
     </div>
    </div>
 
    <!-- Dropdown Menu Phone -->
-   <div id="mobile-menu" class="hidden md:hidden border-t border-gray-100 bg-white px-4 py-3 space-y-2">
-    <button class="block w-full text-left text-sm font-medium py-2" data-page="home">Home</button> 
-    <button class="block w-full text-left text-sm font-medium py-2" data-page="products">Products</button> 
-    <button class="block w-full text-left text-sm font-medium py-2" data-page="visualizer">Visualizer</button> 
-    <button class="block w-full text-left text-sm font-medium py-2" data-page="about">About Us</button> 
-    <button class="block w-full text-left text-sm font-medium py-2 relative flex items-center justify-between" data-page="cart">
+   <div id="mobile-menu" class="hidden md:hidden border-t border-white/10 bg-[#0b1f3a] px-4 py-3 space-y-2 text-gray-200">
+    <button class="block w-full text-left text-sm font-medium py-2 hover:text-red-400" data-page="home">Home</button> 
+    <button class="block w-full text-left text-sm font-medium py-2 hover:text-red-400" data-page="products">Products</button> 
+    <button class="block w-full text-left text-sm font-medium py-2 hover:text-red-400" data-page="visualizer">Visualizer</button> 
+    <button class="block w-full text-left text-sm font-medium py-2 hover:text-red-400" data-page="about">About Us</button> 
+    <button class="block w-full text-left text-sm font-medium py-2 relative flex items-center justify-between hover:text-red-400" data-page="cart">
       <span>Cart</span>
       <span id="mobile-menu-cart-badge" class="hidden bg-red-600 text-white text-xs px-2 py-0.5 rounded-full">0</span>
     </button>
    </div>
+  </nav>
+
   <div class="pt-20"><!-- HOME -->
    <div id="page-home" class="page active relative">
-    <div class="max-w-7xl mx-auto px-4 py-20 md:py-28 grid md:grid-cols-2 gap-12 items-center relative z-10">
+   <div class="max-w-7xl mx-auto px-4 py-20 md:py-28 grid md:grid-cols-2 gap-12 items-center relative z-10">
      <div>
       <h1 data-template-id="hero-title" class="canva-text font-display leading-tight reveal hero-entrance-logo" style="color: rgb(11, 31, 58); font-weight: 700; font-style: normal; font-size: 40px;">Progress in Motion</h1>
-      <p data-template-id="hero-subtitle" class="canva-text mt-5 text-lg leading-relaxed reveal hero-entrance-tagline" style="transition-delay: 100ms; color: rgb(55, 65, 81); font-weight: 400; font-style: normal; font-size: 27px;">Science-backed formulas crafted in Malaysia. Fuel your body with only the finest ingredients for optimal health and performance.</p>
-      <div class="flex gap-4 mt-8 reveal hero-entrance-cta" style="transition-delay:200ms"><button data-template-id="hero-cta" class="canva-button btn-premium px-8 py-3 rounded-full font-medium text-sm tracking-wide" onclick="navigateTo('products')" style="background: rgb(196, 30, 58); color: rgb(255, 255, 255); font-weight: 600; font-style: normal; font-size: 16px;">Shop Now</button> <button data-template-id="hero-cta-secondary" class="canva-button btn-premium px-8 py-3 rounded-full font-medium text-sm tracking-wide border" onclick="navigateTo('about')" style="background: rgb(255, 255, 255); color: rgb(11, 31, 58); font-weight: 600; font-style: normal; font-size: 16px;">Learn More</button>
+      <p data-template-id="hero-subtitle" class="canva-text mt-5 text-lg leading-relaxed reveal hero-entrance-tagline" style="transition-delay: 100ms; color: rgb(55, 65, 81); font-weight: 400; font-style: normal; font-size: 27px;">Precision-crafted formulas driven by science. Empower your body with uncompromising quality and pure ingredients designed for ultimate health and performance.</p>
+      
+      <!-- Butang CTA -->
+      <div class="flex gap-4 mt-8 reveal hero-entrance-cta" style="transition-delay:200ms">
+        <button data-template-id="hero-cta" class="canva-button btn-premium px-8 py-3 rounded-full font-medium text-sm tracking-wide" onclick="navigateTo('products')" style="background: rgb(196, 30, 58); color: rgb(255, 255, 255); font-weight: 600; font-style: normal; font-size: 16px;">Shop Now</button> 
+        <button data-template-id="hero-cta-secondary" class="canva-button btn-premium px-8 py-3 rounded-full font-medium text-sm tracking-wide border" onclick="navigateTo('about')" style="background: rgb(255, 255, 255); color: rgb(11, 31, 58); font-weight: 600; font-style: normal; font-size: 16px;">Learn More</button>
+      </div>
+
+      <!-- Trust Badges (Ditambah di bawah butang) -->
+      <div class="grid grid-cols-3 gap-3 mt-8 pt-6 border-t border-gray-200/60 text-xs md:text-sm font-medium text-gray-600 reveal" style="transition-delay:300ms">
+        <div class="flex items-center gap-2">
+          <i data-lucide="shield-check" class="w-4 h-4 text-red-600 shrink-0"></i>
+          <span>99%+ Purity</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <i data-lucide="flask-conical" class="w-4 h-4 text-red-600 shrink-0"></i>
+          <span>Lab Verified</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <i data-lucide="zap" class="w-4 h-4 text-red-600 shrink-0"></i>
+          <span>Fast Delivery</span>
+        </div>
       </div>
      </div>
+
      <div class="flex justify-center reveal scale-in" style="transition-delay:150ms"><img data-template-id="hero-image" class="canva-image w-full max-w-lg object-cover hero-parallax img-hover relative z-20" loading="eager" src="image/dc2-logo.png">
      </div>
     </div>
@@ -250,10 +294,10 @@
         </div>
        </div>
        <div class="hidden" data-benefits="true">
-        <span data-template-id="prod-0-benefits" class="canva-text" style="color: rgb(55, 65, 81); font-weight: 400; font-style: normal; font-size: 16px;">Supports cardiovascular health|Improves brain function|Reduces inflammation</span>
+        <span data-template-id="prod-0-benefits" class="canva-text" style="color: rgb(55, 65, 81); font-weight: 400; font-style: normal; font-size: 16px;">Supports advanced weight management|Enhances metabolic efficiency|Helps control appetite and cravings</span>
        </div>
        <div class="hidden" data-faq="true">
-        <span data-template-id="prod-0-faq" class="canva-text" style="color: rgb(55, 65, 81); font-weight: 400; font-style: normal; font-size: 16px;">How many capsules per day?::Take 2 softgels daily with meals.|Is it sustainably sourced?::Yes, sourced from wild-caught fish.</span>
+        <span data-template-id="prod-0-faq" class="canva-text" style="color: rgb(55, 65, 81); font-weight: 400; font-style: normal; font-size: 16px;">How is it prepared?::Reconstitute with bacteriostatic water before administration.|Who is this dosage for?::Ideal for beginners or those starting their research cycle.</span>
        </div>
       </div><!-- Product 1 -->
       <div class="prod-item visible product-card bg-white rounded-2xl border border-gray-100 overflow-hidden" data-cat="wellness" data-id="1" data-status="ready">
@@ -270,10 +314,10 @@
         </div>
        </div>
        <div class="hidden" data-benefits="true">
-        <span data-template-id="prod-1-benefits" class="canva-text" style="color: rgb(55, 65, 81); font-weight: 400; font-style: normal; font-size: 16px;">Strengthens bones|Boosts immune system|Supports calcium absorption</span>
+        <span data-template-id="prod-1-benefits" class="canva-text" style="color: rgb(55, 65, 81); font-weight: 400; font-style: normal; font-size: 16px;">Supports advanced weight management|Enhances metabolic efficiency|Helps control appetite and cravings</span>
        </div>
        <div class="hidden" data-faq="true">
-        <span data-template-id="prod-1-faq" class="canva-text" style="color: rgb(55, 65, 81); font-weight: 400; font-style: normal; font-size: 16px;">Can I take it with food?::Yes, best absorbed with a fat-containing meal.|Is it suitable for vegetarians?::Yes, our formula uses plant-based K2.</span>
+        <span data-template-id="prod-1-faq" class="canva-text" style="color: rgb(55, 65, 81); font-weight: 400; font-style: normal; font-size: 16px;">How is it prepared?::Reconstitute with bacteriostatic water before administration.|Who is this dosage for?::Designed for advanced research cycles requiring higher concentration.</span>
        </div>
       </div><!-- Product 2 -->
       <div class="prod-item visible product-card bg-white rounded-2xl border border-gray-100 overflow-hidden" data-cat="muscle" data-id="2" data-status="ready">
@@ -290,10 +334,10 @@
         </div>
        </div>
        <div class="hidden" data-benefits="true">
-        <span data-template-id="prod-2-benefits" class="canva-text" style="color: rgb(55, 65, 81); font-weight: 400; font-style: normal; font-size: 16px;">27g protein per serving|Fast absorption|Lean muscle growth</span>
+        <span data-template-id="prod-2-benefits" class="canva-text" style="color: rgb(55, 65, 81); font-weight: 400; font-style: normal; font-size: 16px;">Boosts cellular energy & ATP production|Supports endurance and physical performance|Promotes metabolic & insulin sensitivity</span>
        </div>
        <div class="hidden" data-faq="true">
-        <span data-template-id="prod-2-faq" class="canva-text" style="color: rgb(55, 65, 81); font-weight: 400; font-style: normal; font-size: 16px;">Is it lactose-free?::Contains minimal lactose due to isolation process.|How should I mix it?::Blend with 250ml water or milk.</span>
+        <span data-template-id="prod-2-faq" class="canva-text" style="color: rgb(55, 65, 81); font-weight: 400; font-style: normal; font-size: 16px;">How should it be stored?::Keep refrigerated after reconstitution.|When is the best time to administer?::Best administered prior to endurance sessions or morning routines.</span>
        </div>
       </div><!-- Product 3 -->
       <div class="prod-item visible product-card bg-white rounded-2xl border border-gray-100 overflow-hidden" data-cat="skin" data-id="3" data-status="preorder">
@@ -311,10 +355,10 @@
         </div>
        </div>
        <div class="hidden" data-benefits="true">
-        <span data-template-id="prod-3-benefits" class="canva-text" style="color: rgb(55, 65, 81); font-weight: 400; font-style: normal; font-size: 16px;">Improves skin elasticity|Strengthens hair &amp; nails|Supports joint health</span>
+        <span data-template-id="prod-3-benefits" class="canva-text" style="color: rgb(55, 65, 81); font-weight: 400; font-style: normal; font-size: 16px;">Promotes skin elasticity and collagen production|Accelerates tissue repair and wound healing|Supports anti-aging and skin renewal</span>
        </div>
        <div class="hidden" data-faq="true">
-        <span data-template-id="prod-3-faq" class="canva-text" style="color: rgb(55, 65, 81); font-weight: 400; font-style: normal; font-size: 16px;">When will I see results?::Most users notice improvements in 4-6 weeks.|Can I add it to hot drinks?::Yes, it dissolves in both hot and cold liquids.</span>
+        <span data-template-id="prod-3-faq" class="canva-text" style="color: rgb(55, 65, 81); font-weight: 400; font-style: normal; font-size: 16px;">Does it help with hair & skin?::Yes, it promotes collagen synthesis and skin tissue repair.|Is reconstitution required?::Yes, reconstitute with sterile or bacteriostatic water.</span>
        </div>
       </div><!-- Product 4 -->
       <div class="prod-item visible product-card bg-white rounded-2xl border border-gray-100 overflow-hidden" data-cat="fat-loss" data-id="4" data-status="ready">
@@ -331,10 +375,10 @@
         </div>
        </div>
        <div class="hidden" data-benefits="true">
-        <span data-template-id="prod-4-benefits" class="canva-text" style="color: rgb(55, 65, 81); font-weight: 400; font-style: normal; font-size: 16px;">Supports fat metabolism|Preserves lean muscle|Natural plant-derived</span>
+        <span data-template-id="prod-4-benefits" class="canva-text" style="color: rgb(55, 65, 81); font-weight: 400; font-style: normal; font-size: 16px;">Targeted fat metabolism support|Preserves lean muscle tissue|Enhances endurance during workouts</span>
        </div>
        <div class="hidden" data-faq="true">
-        <span data-template-id="prod-4-faq" class="canva-text" style="color: rgb(55, 65, 81); font-weight: 400; font-style: normal; font-size: 16px;">How long to take it?::Best results with 8-12 weeks of consistent use.|Any side effects?::Generally well-tolerated when taken as directed.</span>
+        <span data-template-id="prod-4-faq" class="canva-text" style="color: rgb(55, 65, 81); font-weight: 400; font-style: normal; font-size: 16px;">What is the main benefit?::Targeted fat metabolism and lean muscle preservation.|How to store unmixed vials?::Store in a cool, dry place away from direct sunlight.</span>
        </div>
       </div><!-- Product 5 -->
       <div class="prod-item visible product-card bg-white rounded-2xl border border-gray-100 overflow-hidden" data-cat="fat-loss" data-id="5" data-status="outofstock">
@@ -351,10 +395,10 @@
         </div>
        </div>
        <div class="hidden" data-benefits="true">
-        <span data-template-id="prod-5-benefits" class="canva-text" style="color: rgb(55, 65, 81); font-weight: 400; font-style: normal; font-size: 16px;">Boosts energy during workouts|Supports fat transport|Sugar-free formula</span>
+        <span data-template-id="prod-5-benefits" class="canva-text" style="color: rgb(55, 65, 81); font-weight: 400; font-style: normal; font-size: 16px;">Convenient oral capsule format|Supports daily fat burn and metabolism|Sustained energy without jitters</span>
        </div>
        <div class="hidden" data-faq="true">
-        <span data-template-id="prod-5-faq" class="canva-text" style="color: rgb(55, 65, 81); font-weight: 400; font-style: normal; font-size: 16px;">When should I take it?::30 minutes before exercise for best results.|Does it contain caffeine?::No, stimulant-free formula.</span>
+        <span data-template-id="prod-5-faq" class="canva-text" style="color: rgb(55, 65, 81); font-weight: 400; font-style: normal; font-size: 16px;">How many capsules per serving?::Take 1-2 capsules daily with water before meals.|Does it require injection?::No, this is an oral capsule format for easy daily use.</span>
        </div>
       </div><!-- Product 6 -->
       <div class="prod-item visible product-card bg-white rounded-2xl border border-gray-100 overflow-hidden" data-cat="muscle" data-id="6" data-status="ready">
@@ -371,10 +415,10 @@
         </div>
        </div>
        <div class="hidden" data-benefits="true">
-        <span data-template-id="prod-6-benefits" class="canva-text" style="color: rgb(55, 65, 81); font-weight: 400; font-style: normal; font-size: 16px;">Increases strength output|Supports muscle volume|Improves recovery between sets</span>
+        <span data-template-id="prod-6-benefits" class="canva-text" style="color: rgb(55, 65, 81); font-weight: 400; font-style: normal; font-size: 16px;">Convenient pre-filled pen format|Precise and easy dosage control|Maximum bioavailability and effectiveness</span>
        </div>
        <div class="hidden" data-faq="true">
-        <span data-template-id="prod-6-faq" class="canva-text" style="color: rgb(55, 65, 81); font-weight: 400; font-style: normal; font-size: 16px;">Do I need a loading phase?::Optional. 5g daily is effective long-term.|Can I mix with protein?::Yes, perfectly fine to combine.</span>
+        <span data-template-id="prod-6-faq" class="canva-text" style="color: rgb(55, 65, 81); font-weight: 400; font-style: normal; font-size: 16px;">Is mixing required?::No, it comes pre-filled and ready for immediate use.|How do I adjust the dosage?::Simply click and dial to your required volume unit.</span>
        </div>
       </div><!-- Product 7 -->
       <div class="prod-item visible product-card bg-white rounded-2xl border border-gray-100 overflow-hidden" data-cat="recovery" data-id="7" data-status="ready">
@@ -391,10 +435,10 @@
         </div>
        </div>
        <div class="hidden" data-benefits="true">
-        <span data-template-id="prod-7-benefits" class="canva-text" style="color: rgb(55, 65, 81); font-weight: 400; font-style: normal; font-size: 16px;">Reduces muscle cramps|Promotes restful sleep|Supports nervous system</span>
+        <span data-template-id="prod-7-benefits" class="canva-text" style="color: rgb(55, 65, 81); font-weight: 400; font-style: normal; font-size: 16px;">Convenient pre-filled pen format|Precise and easy dosage control|Maximum bioavailability and effectiveness</span>
        </div>
        <div class="hidden" data-faq="true">
-        <span data-template-id="prod-7-faq" class="canva-text" style="color: rgb(55, 65, 81); font-weight: 400; font-style: normal; font-size: 16px;">Best time to take?::Evening, 30 minutes before bed.|Which forms of magnesium?::Glycinate, citrate, and taurate blend.</span>
+        <span data-template-id="prod-7-faq" class="canva-text" style="color: rgb(55, 65, 81); font-weight: 400; font-style: normal; font-size: 16px;">Is mixing required?::No, it comes pre-filled in a high-capacity pen format.|How long does one pen last?::Depends on dosage protocol, suitable for extended cycles.</span>
        </div>
       </div><!-- Product 8 -->
       <div class="prod-item visible product-card bg-white rounded-2xl border border-gray-100 overflow-hidden" data-cat="wellness" data-id="8" data-status="ready">
@@ -504,8 +548,8 @@
    </div><!-- VISUALIZER -->
    <div id="page-visualizer" class="page relative">
     <div class="max-w-3xl mx-auto px-4 py-12 relative z-10">
-     <h1 data-template-id="viz-title" class="canva-text font-display text-center mb-2 reveal" style="color: rgb(11, 31, 58); font-weight: 700; font-style: normal; font-size: 28px;">Injection Measurement Visualizer</h1>
-     <p data-template-id="viz-subtitle" class="canva-text text-center mb-10 opacity-70 reveal" style="transition-delay: 100ms; color: rgb(107, 114, 128); font-weight: 400; font-style: normal; font-size: 16px;">An educational tool to help visualize liquid measurement volumes</p>
+     <h1 data-template-id="viz-title" class="canva-text font-display text-center mb-2 reveal" style="color: rgb(11, 31, 58); font-weight: 700; font-style: normal; font-size: 28px;">Dosage Calculator</h1>
+     <p data-template-id="viz-subtitle" class="canva-text text-center mb-10 opacity-70 reveal" style="transition-delay: 100ms; color: rgb(107, 114, 128); font-weight: 400; font-style: normal; font-size: 16px;">Calculate the required injection volume based on peptide dose, vial strength, and bacteriostatic water.</p>
      <div class="flex justify-center mb-8 reveal scale-in" style="transition-delay:200ms">
       <div id="syringe-container" class="syringe-wrap">
        <svg viewBox="0 0 120 400" width="120" height="400" xmlns="http://www.w3.org/2000/svg"><rect x="35" y="60" width="50" height="280" rx="4" fill="#f0f4f8" stroke="#0b1f3a" stroke-width="2"></rect> <rect x="30" y="55" width="60" height="10" rx="3" fill="#0b1f3a"></rect> <rect x="57" y="340" width="6" height="50" fill="#9ca3af"></rect> <polygon points="57,390 63,390 60,400" fill="#9ca3af"></polygon> <g stroke="#0b1f3a" stroke-width="1" font-size="9" fill="#0b1f3a" font-family="DM Sans, sans-serif">
@@ -567,8 +611,7 @@
      </div>
      <div class="flex flex-wrap justify-center gap-2 mb-8 reveal" style="transition-delay:300ms"><button class="vol-btn px-3 py-2 rounded-lg text-sm font-medium border border-gray-200 hover:bg-gray-50" data-vol="0.1">0.1 ml</button> <button class="vol-btn px-3 py-2 rounded-lg text-sm font-medium border border-gray-200 hover:bg-gray-50" data-vol="0.2">0.2 ml</button> <button class="vol-btn px-3 py-2 rounded-lg text-sm font-medium border border-gray-200 hover:bg-gray-50" data-vol="0.3">0.3 ml</button> <button class="vol-btn px-3 py-2 rounded-lg text-sm font-medium border border-gray-200 hover:bg-gray-50" data-vol="0.4">0.4 ml</button> <button class="vol-btn px-3 py-2 rounded-lg text-sm font-medium border border-gray-200 hover:bg-gray-50" data-vol="0.5">0.5 ml</button> <button class="vol-btn px-3 py-2 rounded-lg text-sm font-medium border border-gray-200 hover:bg-gray-50" data-vol="0.6">0.6 ml</button> <button class="vol-btn px-3 py-2 rounded-lg text-sm font-medium border border-gray-200 hover:bg-gray-50" data-vol="0.7">0.7 ml</button> <button class="vol-btn px-3 py-2 rounded-lg text-sm font-medium border border-gray-200 hover:bg-gray-50" data-vol="0.8">0.8 ml</button> <button class="vol-btn px-3 py-2 rounded-lg text-sm font-medium border border-gray-200 hover:bg-gray-50" data-vol="0.9">0.9 ml</button> <button class="vol-btn px-3 py-2 rounded-lg text-sm font-medium border border-gray-200 hover:bg-gray-50" data-vol="1.0">1.0 ml</button> <button class="vol-btn px-3 py-2 rounded-lg text-sm font-medium border border-gray-200 hover:bg-gray-50" data-vol="1.5">1.5 ml</button> <button class="vol-btn px-3 py-2 rounded-lg text-sm font-medium border border-gray-200 hover:bg-gray-50" data-vol="2.0">2.0 ml</button>
      </div>
-     <div class="flex justify-center gap-3 mb-10"><button data-template-id="viz-prev-btn" class="canva-button btn-premium px-5 py-2 rounded-full text-sm font-medium border border-gray-200" id="viz-prev" style="background: rgb(255, 255, 255); color: rgb(11, 31, 58); font-weight: 500; font-style: normal; font-size: 16px;">Previous Volume</button> <button data-template-id="viz-next-btn" class="canva-button btn-premium px-5 py-2 rounded-full text-sm font-medium border border-gray-200" id="viz-next" style="background: rgb(255, 255, 255); color: rgb(11, 31, 58); font-weight: 500; font-style: normal; font-size: 16px;">Next Volume</button> <button data-template-id="viz-reset-btn" class="canva-button btn-premium px-5 py-2 rounded-full text-sm font-medium" id="viz-reset" style="background: rgb(196, 30, 58); color: rgb(255, 255, 255); font-weight: 600; font-style: normal; font-size: 16px;">Reset</button>
-     </div>
+     
      <div class="bg-gray-50 border border-gray-200 rounded-xl p-5 reveal">
       <p data-template-id="viz-disclaimer" class="canva-text text-xs leading-relaxed text-center" style="color: rgb(107, 114, 128); font-weight: 400; font-style: normal; font-size: 16px;">This visualizer is provided for educational purposes only and does not provide personalized dosing recommendations. Always follow the instructions supplied with the product and consult an appropriate healthcare professional if needed.</p>
      </div>
@@ -592,21 +635,21 @@
      <h1 data-template-id="about-title" class="canva-text font-display text-center mb-6 reveal" style="color: rgb(11, 31, 58); font-weight: 700; font-style: normal; font-size: 32px;">About DeltaCare</h1>
      <div class="grid md:grid-cols-2 gap-10 items-center mt-10"><img data-template-id="about-image" class="canva-image w-full object-cover rounded-2xl img-hover reveal fade-left" loading="lazy" src="https://images.pexels.com/photos/3825527/pexels-photo-3825527.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=1280" alt="Scientist examining molecule model in laboratory">
       <div class="reveal fade-right">
-       <p data-template-id="about-intro" class="canva-text leading-relaxed" style="color: rgb(55, 65, 81); font-weight: 400; font-style: normal; font-size: 16px;">DeltaCare was founded with a singular vision: to make premium-grade wellness products accessible to Malaysians who refuse to compromise on quality. Our team of researchers and formulators work tirelessly to bring you supplements that are backed by science, free from unnecessary additives, and crafted with integrity.</p>
+       <p data-template-id="about-intro" class="canva-text leading-relaxed" style="color: rgb(55, 65, 81); font-weight: 400; font-style: normal; font-size: 16px;">DeltaCare was founded with a singular vision: to make premium pharmaceutical prade wellness products accessible to everyone who refuses to compromise on quality. Our dedicated team works tirelessly to bring you formulations backed by science, free from unnecessary additives, and crafted with absolute integrity.</p>
       </div>
      </div>
      <div class="grid sm:grid-cols-3 gap-8 mt-16">
       <div class="text-center reveal scale-in" style="--i:0">
        <h3 data-template-id="about-vision-title" class="canva-text font-semibold mb-2" style="color: rgb(11, 31, 58); font-weight: 600; font-style: normal; font-size: 19px;">Our Vision</h3>
-       <p data-template-id="about-vision-text" class="canva-text text-sm opacity-70 leading-relaxed" style="color: rgb(107, 114, 128); font-weight: 400; font-style: normal; font-size: 16px;">To be Malaysia's most trusted premium wellness brand, empowering individuals to achieve their peak potential.</p>
+       <p data-template-id="about-vision-text" class="canva-text text-sm opacity-70 leading-relaxed" style="color: rgb(107, 114, 128); font-weight: 400; font-style: normal; font-size: 16px;">To be a global leader in advanced wellness, empowering individuals worldwide to reach their peak physical and performance potential.</p>
       </div>
       <div class="text-center reveal scale-in" style="--i:1">
        <h3 data-template-id="about-mission-title" class="canva-text font-semibold mb-2" style="color: rgb(11, 31, 58); font-weight: 600; font-style: normal; font-size: 19px;">Our Mission</h3>
-       <p data-template-id="about-mission-text" class="canva-text text-sm opacity-70 leading-relaxed" style="color: rgb(107, 114, 128); font-weight: 400; font-style: normal; font-size: 16px;">Deliver science-backed, transparently formulated supplements that set the standard for quality in Southeast Asia.</p>
+       <p data-template-id="about-mission-text" class="canva-text text-sm opacity-70 leading-relaxed" style="color: rgb(107, 114, 128); font-weight: 400; font-style: normal; font-size: 16px;">Deliver science-backed, transparently formulated solutions that set the highest international standards for purity, safety, and efficacy.</p>
       </div>
       <div class="text-center reveal scale-in" style="--i:2">
        <h3 data-template-id="about-values-title" class="canva-text font-semibold mb-2" style="color: rgb(11, 31, 58); font-weight: 600; font-style: normal; font-size: 19px;">Our Values</h3>
-       <p data-template-id="about-values-text" class="canva-text text-sm opacity-70 leading-relaxed" style="color: rgb(107, 114, 128); font-weight: 400; font-style: normal; font-size: 16px;">Integrity, transparency, innovation, and an unwavering commitment to customer wellness guide everything we do.</p>
+       <p data-template-id="about-values-text" class="canva-text text-sm opacity-70 leading-relaxed" style="color: rgb(107, 114, 128); font-weight: 400; font-style: normal; font-size: 16px;">Uncompromising integrity, scientific precision, full transparency, and a dedication to empowering human health guide everything we do.</p>
       </div>
      </div>
      <hr class="my-16 border-gray-200">
@@ -648,7 +691,9 @@ function observeReveals() { document.querySelectorAll('.reveal:not(.visible)').f
 observeReveals();
 updateBackgroundBlur();
 
-let cart = JSON.parse(localStorage.getItem("cart")) || [];
+let cart = JSON.parse(localStorage.getItem('deltacare_cart')) || [];
+// 2. TERUS panggil updateCartBadge() di sini supaya badge dan nombor muncul terus!
+updateCartBadge();
 
 function navigateTo(page) {
   const current = document.querySelector('.page.active');
@@ -761,6 +806,8 @@ function addToCart(id, event) {
 }
 
 function updateCartBadge() {
+  localStorage.setItem('deltacare_cart', JSON.stringify(cart));
+
   const count = cart.reduce((s, i) => s + i.qty, 0);
   
   // 1. Badge Desktop
@@ -772,7 +819,7 @@ function updateCartBadge() {
     setTimeout(() => badgeDesktop.classList.remove('badge-bounce'), 400);
   }
 
-  // 2. Badge Mobile (Ikon Troli Atas) - Tambah animasi bounce & setTimeout
+  // 2. Badge Mobile (Ikon Troli Atas)
   const badgeMobile = document.getElementById('mobile-cart-badge');
   if (badgeMobile) {
     badgeMobile.textContent = count;
@@ -868,6 +915,16 @@ document.addEventListener('mousemove', (e) => {
 
 lucide.createIcons();
 window.addEventListener('load', () => {
+  updateCartBadge();
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Render semula semua ikon Lucide (seperti ikon shopping-cart)
+  if (typeof lucide !== 'undefined') {
+    lucide.createIcons();
+  }
+  
+  // Kemaskini badge nombor troli
   updateCartBadge();
 });
 
