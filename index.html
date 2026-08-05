@@ -77,6 +77,8 @@
     .pt-20 { position: relative; z-index: 10; }
     .prod-item { display: none; }
     .prod-item.visible { display: block; }
+    .calc-btn.active { background: #0b1f3a; color: #fff; border-color: #0b1f3a; }
+    .calc-btn:hover { border-color: #0b1f3a; }
   </style>
 </head>
  <body data-template-id="__page-root" class="w-full min-h-screen" style="background: rgb(242, 246, 255);">
@@ -165,7 +167,7 @@
    <div class="max-w-7xl mx-auto px-4 py-20 md:py-28 grid md:grid-cols-2 gap-12 items-center relative z-10">
      <div>
       <h1 data-template-id="hero-title" class="canva-text font-display leading-tight reveal hero-entrance-logo" style="color: rgb(11, 31, 58); font-weight: 700; font-style: normal; font-size: 40px;">Progress in Motion</h1>
-      <p data-template-id="hero-subtitle" class="canva-text mt-5 text-lg leading-relaxed reveal hero-entrance-tagline" style="transition-delay: 100ms; color: rgb(55, 65, 81); font-weight: 400; font-style: normal; font-size: 27px;">Precision-crafted formulas driven by science. Empower your body with uncompromising quality and pure ingredients designed for ultimate health and performance.</p>
+      <p data-template-id="hero-subtitle" class="canva-text mt-5 text-lg leading-relaxed reveal hero-entrance-tagline" style="transition-delay: 100ms; color: rgb(55, 65, 81); font-weight: 400; font-style: normal; font-size: 20px;">Precision-crafted formulas driven by science. Empower your body with uncompromising quality and pure ingredients designed for ultimate health and performance.</p>
       
       <!-- Butang CTA -->
       <div class="flex gap-4 mt-8 reveal hero-entrance-cta" style="transition-delay:200ms">
@@ -202,7 +204,7 @@
      </div>
 
      <div class="flex justify-center reveal scale-in" style="transition-delay:150ms"><img data-template-id="hero-image" class="canva-image w-full max-w-lg object-cover hero-parallax img-hover relative z-20" loading="eager" src="image/dc2-logo.png">
-     </div>
+     
     </div>
     <section class="max-w-4xl mx-auto px-4 py-16 text-center">
      <h2 data-template-id="brand-intro-title" class="canva-text font-display reveal hero-entrance-brand" style="color: rgb(11, 31, 58); font-weight: 700; font-style: normal; font-size: 40px;">Welcome to DeltaCare</h2>
@@ -312,6 +314,7 @@
       <h2 data-template-id="home-cta-title" class="canva-text font-display" style="color: rgb(255, 255, 255); font-weight: 700; font-style: normal; font-size: 24px;">Explore the DeltaCare Collection</h2><button data-template-id="home-cta-btn" class="canva-button btn-premium mt-6 px-8 py-3 rounded-full font-medium text-sm" onclick="navigateTo('products')" style="background: rgb(196, 30, 58); color: rgb(255, 255, 255); font-weight: 600; font-style: normal; font-size: 16px;">Shop Now</button>
      </div>
     </section>
+    </div>
    </div><!-- PRODUCTS PAGE -->
    <div id="page-products" class="page relative">
     <div class="max-w-7xl mx-auto px-4 py-12 relative z-10">
@@ -584,78 +587,110 @@
       </div>
      </div>
     </div>
-   </div><!-- VISUALIZER -->
-   <div id="page-visualizer" class="page relative">
-    <div class="max-w-3xl mx-auto px-4 py-12 relative z-10">
-     <h1 data-template-id="viz-title" class="canva-text font-display text-center mb-2 reveal" style="color: rgb(11, 31, 58); font-weight: 700; font-style: normal; font-size: 28px;">Dosage Calculator</h1>
-     <p data-template-id="viz-subtitle" class="canva-text text-center mb-10 opacity-70 reveal" style="transition-delay: 100ms; color: rgb(107, 114, 128); font-weight: 400; font-style: normal; font-size: 16px;">Calculate the required injection volume based on peptide dose, vial strength, and bacteriostatic water.</p>
-     <div class="flex justify-center mb-8 reveal scale-in" style="transition-delay:200ms">
-      <div id="syringe-container" class="syringe-wrap">
-       <svg viewBox="0 0 120 400" width="120" height="400" xmlns="http://www.w3.org/2000/svg"><rect x="35" y="60" width="50" height="280" rx="4" fill="#f0f4f8" stroke="#0b1f3a" stroke-width="2"></rect> <rect x="30" y="55" width="60" height="10" rx="3" fill="#0b1f3a"></rect> <rect x="57" y="340" width="6" height="50" fill="#9ca3af"></rect> <polygon points="57,390 63,390 60,400" fill="#9ca3af"></polygon> <g stroke="#0b1f3a" stroke-width="1" font-size="9" fill="#0b1f3a" font-family="DM Sans, sans-serif">
-         <line x1="35" y1="326" x2="45" y2="326"></line>
-         <text x="22" y="329" text-anchor="end">
-          0.1
-         </text>
-         <line x1="35" y1="300" x2="45" y2="300"></line>
-         <text x="22" y="303" text-anchor="end">
-          0.2
-         </text>
-         <line x1="35" y1="274" x2="48" y2="274"></line>
-         <text x="22" y="277" text-anchor="end">
-          0.3
-         </text>
-         <line x1="35" y1="248" x2="45" y2="248"></line>
-         <text x="22" y="251" text-anchor="end">
-          0.4
-         </text>
-         <line x1="35" y1="222" x2="48" y2="222"></line>
-         <text x="22" y="225" text-anchor="end">
-          0.5
-         </text>
-         <line x1="35" y1="196" x2="45" y2="196"></line>
-         <text x="22" y="199" text-anchor="end">
-          0.6
-         </text>
-         <line x1="35" y1="170" x2="48" y2="170"></line>
-         <text x="22" y="173" text-anchor="end">
-          0.7
-         </text>
-         <line x1="35" y1="144" x2="45" y2="144"></line>
-         <text x="22" y="147" text-anchor="end">
-          0.8
-         </text>
-         <line x1="35" y1="118" x2="48" y2="118"></line>
-         <text x="22" y="121" text-anchor="end">
-          0.9
-         </text>
-         <line x1="35" y1="92" x2="48" y2="92"></line>
-         <text x="22" y="95" text-anchor="end">
-          1.0
-         </text>
-         <line x1="35" y1="79" x2="45" y2="79"></line>
-         <text x="22" y="82" text-anchor="end">
-          1.5
-         </text>
-         <line x1="35" y1="66" x2="48" y2="66"></line>
-         <text x="22" y="69" text-anchor="end">
-          2.0
-         </text>
-        </g> <rect id="syringe-liquid" x="37" y="338" width="46" height="0" fill="#C41E3A" opacity="0.7" rx="2" style="transition: y 0.6s cubic-bezier(0.4,0,0.2,1), height 0.6s cubic-bezier(0.4,0,0.2,1);"></rect> <rect id="syringe-plunger" x="38" y="30" width="44" height="10" rx="3" fill="#0b1f3a" style="transition: y 0.6s cubic-bezier(0.4,0,0.2,1);"></rect> <rect x="55" y="10" width="10" height="25" rx="3" fill="#0b1f3a"></rect> <rect x="50" y="5" width="20" height="8" rx="4" fill="#0b1f3a"></rect>
-       </svg>
-      </div>
-     </div>
-     <div class="text-center mb-8">
-      <p class="text-sm text-gray-500 font-medium uppercase tracking-wider">Selected Volume</p>
-      <p id="viz-volume-display" class="text-4xl font-bold text-[#0b1f3a] mt-1">0.0 ml</p>
-     </div>
-     <div class="flex flex-wrap justify-center gap-2 mb-8 reveal" style="transition-delay:300ms"><button class="vol-btn px-3 py-2 rounded-lg text-sm font-medium border border-gray-200 hover:bg-gray-50" data-vol="0.1">0.1 ml</button> <button class="vol-btn px-3 py-2 rounded-lg text-sm font-medium border border-gray-200 hover:bg-gray-50" data-vol="0.2">0.2 ml</button> <button class="vol-btn px-3 py-2 rounded-lg text-sm font-medium border border-gray-200 hover:bg-gray-50" data-vol="0.3">0.3 ml</button> <button class="vol-btn px-3 py-2 rounded-lg text-sm font-medium border border-gray-200 hover:bg-gray-50" data-vol="0.4">0.4 ml</button> <button class="vol-btn px-3 py-2 rounded-lg text-sm font-medium border border-gray-200 hover:bg-gray-50" data-vol="0.5">0.5 ml</button> <button class="vol-btn px-3 py-2 rounded-lg text-sm font-medium border border-gray-200 hover:bg-gray-50" data-vol="0.6">0.6 ml</button> <button class="vol-btn px-3 py-2 rounded-lg text-sm font-medium border border-gray-200 hover:bg-gray-50" data-vol="0.7">0.7 ml</button> <button class="vol-btn px-3 py-2 rounded-lg text-sm font-medium border border-gray-200 hover:bg-gray-50" data-vol="0.8">0.8 ml</button> <button class="vol-btn px-3 py-2 rounded-lg text-sm font-medium border border-gray-200 hover:bg-gray-50" data-vol="0.9">0.9 ml</button> <button class="vol-btn px-3 py-2 rounded-lg text-sm font-medium border border-gray-200 hover:bg-gray-50" data-vol="1.0">1.0 ml</button> <button class="vol-btn px-3 py-2 rounded-lg text-sm font-medium border border-gray-200 hover:bg-gray-50" data-vol="1.5">1.5 ml</button> <button class="vol-btn px-3 py-2 rounded-lg text-sm font-medium border border-gray-200 hover:bg-gray-50" data-vol="2.0">2.0 ml</button>
-     </div>
-     
-     <div class="bg-gray-50 border border-gray-200 rounded-xl p-5 reveal">
-      <p data-template-id="viz-disclaimer" class="canva-text text-xs leading-relaxed text-center" style="color: rgb(107, 114, 128); font-weight: 400; font-style: normal; font-size: 16px;">This visualizer is provided for educational purposes only and does not provide personalized dosing recommendations. Always follow the instructions supplied with the product and consult an appropriate healthcare professional if needed.</p>
-     </div>
+   </div>
+   
+   <!-- VISUALIZER -->
+<div id="page-visualizer" class="page relative">
+ <div class="max-w-3xl mx-auto px-4 py-12 relative z-10">
+  <h1 data-template-id="viz-title" class="canva-text font-display text-center mb-2 reveal" style="color: rgb(11, 31, 58); font-weight: 700; font-style: normal; font-size: 28px;">Dosage Calculator</h1>
+  <p data-template-id="viz-subtitle" class="canva-text text-center mb-8 opacity-70 reveal" style="transition-delay: 100ms; color: rgb(107, 114, 128); font-weight: 400; font-style: normal; font-size: 16px;">Calculate the required injection volume based on dose, peptide strength, and BAC water volume.</p>
+  
+  <!-- Syringe Display -->
+  <div class="flex justify-center mb-6 reveal scale-in" style="transition-delay:200ms">
+   <div id="syringe-container" class="syringe-wrap">
+    <svg viewBox="0 0 120 400" width="120" height="400" xmlns="http://www.w3.org/2000/svg">
+      <rect x="35" y="60" width="50" height="280" rx="4" fill="#f0f4f8" stroke="#0b1f3a" stroke-width="2"></rect> 
+      <rect x="30" y="55" width="60" height="10" rx="3" fill="#0b1f3a"></rect> 
+      <rect x="57" y="340" width="6" height="50" fill="#9ca3af"></rect> 
+      <polygon points="57,390 63,390 60,400" fill="#9ca3af"></polygon> 
+      <g stroke="#0b1f3a" stroke-width="1" font-size="9" fill="#0b1f3a" font-family="DM Sans, sans-serif">
+        <line x1="35" y1="326" x2="45" y2="326"></line><text x="22" y="329" text-anchor="end">0.1</text>
+        <line x1="35" y1="300" x2="45" y2="300"></line><text x="22" y="303" text-anchor="end">0.2</text>
+        <line x1="35" y1="274" x2="48" y2="274"></line><text x="22" y="277" text-anchor="end">0.3</text>
+        <line x1="35" y1="248" x2="45" y2="248"></line><text x="22" y="251" text-anchor="end">0.4</text>
+        <line x1="35" y1="222" x2="48" y2="222"></line><text x="22" y="225" text-anchor="end">0.5</text>
+        <line x1="35" y1="196" x2="45" y2="196"></line><text x="22" y="199" text-anchor="end">0.6</text>
+        <line x1="35" y1="170" x2="48" y2="170"></line><text x="22" y="173" text-anchor="end">0.7</text>
+        <line x1="35" y1="144" x2="45" y2="144"></line><text x="22" y="147" text-anchor="end">0.8</text>
+        <line x1="35" y1="118" x2="48" y2="118"></line><text x="22" y="121" text-anchor="end">0.9</text>
+        <line x1="35" y1="92" x2="48" y2="92"></line><text x="22" y="95" text-anchor="end">1.0</text>
+        <line x1="35" y1="79" x2="45" y2="79"></line><text x="22" y="82" text-anchor="end">1.5</text>
+        <line x1="35" y1="66" x2="48" y2="66"></line><text x="22" y="69" text-anchor="end">2.0</text>
+      </g> 
+      <rect id="syringe-liquid" x="37" y="338" width="46" height="0" fill="#C41E3A" opacity="0.7" rx="2" style="transition: y 0.6s cubic-bezier(0.4,0,0.2,1), height 0.6s cubic-bezier(0.4,0,0.2,1);"></rect> 
+      <rect id="syringe-plunger" x="38" y="328" width="44" height="10" rx="3" fill="#0b1f3a" style="transition: y 0.6s cubic-bezier(0.4,0,0.2,1);"></rect> 
+      <rect x="55" y="10" width="10" height="25" rx="3" fill="#0b1f3a"></rect> 
+      <rect x="50" y="5" width="20" height="8" rx="4" fill="#0b1f3a"></rect>
+    </svg>
+   </div>
+  </div>
+
+  <div class="text-center mb-8">
+   <p class="text-sm text-gray-500 font-medium uppercase tracking-wider">Required Injection Volume</p>
+   <p id="viz-volume-display" class="text-4xl font-bold text-[#0b1f3a] mt-1">0.00 ml</p>
+  </div>
+
+  <!-- Form Selection Section -->
+  <div class="bg-white/80 backdrop-blur-sm p-6 rounded-2xl border border-gray-100 shadow-sm space-y-6 mb-8 reveal">
+   
+   <!-- 1. Dose of Peptide -->
+   <div>
+    <label class="block text-sm font-semibold text-[#0b1f3a] mb-2">1. Select Dose of Peptide (mg)</label>
+    <div class="flex flex-wrap gap-2" id="dose-options">
+     <button class="calc-btn dose-btn px-3 py-1.5 rounded-lg text-sm font-medium border border-gray-200" data-val="0.1">0.1mg</button>
+     <button class="calc-btn dose-btn px-3 py-1.5 rounded-lg text-sm font-medium border border-gray-200" data-val="0.25">0.25mg</button>
+     <button class="calc-btn dose-btn px-3 py-1.5 rounded-lg text-sm font-medium border border-gray-200" data-val="0.5">0.5mg</button>
+     <button class="calc-btn dose-btn px-3 py-1.5 rounded-lg text-sm font-medium border border-gray-200" data-val="1">1mg</button>
+     <button class="calc-btn dose-btn px-3 py-1.5 rounded-lg text-sm font-medium border border-gray-200" data-val="2.5">2.5mg</button>
+     <button class="calc-btn dose-btn px-3 py-1.5 rounded-lg text-sm font-medium border border-gray-200" data-val="5">5mg</button>
+     <button class="calc-btn dose-btn px-3 py-1.5 rounded-lg text-sm font-medium border border-gray-200" data-val="7.5">7.5mg</button>
+     <button class="calc-btn dose-btn px-3 py-1.5 rounded-lg text-sm font-medium border border-gray-200" data-val="10">10mg</button>
+     <button class="calc-btn dose-btn px-3 py-1.5 rounded-lg text-sm font-medium border border-gray-200" data-val="other">Other</button>
     </div>
-   </div><!-- CART -->
+    <input type="number" id="custom-dose" placeholder="Enter dose in mg (> 10mg)" class="hidden mt-2 w-full p-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:border-red-500" step="any">
+   </div>
+
+   <!-- 2. Peptide Strength -->
+   <div>
+    <label class="block text-sm font-semibold text-[#0b1f3a] mb-2">2. Select Peptide Strength / Vial Size (mg)</label>
+    <div class="flex flex-wrap gap-2" id="strength-options">
+     <button class="calc-btn strength-btn px-3 py-1.5 rounded-lg text-sm font-medium border border-gray-200" data-val="5">5mg</button>
+     <button class="calc-btn strength-btn px-3 py-1.5 rounded-lg text-sm font-medium border border-gray-200" data-val="10">10mg</button>
+     <button class="calc-btn strength-btn px-3 py-1.5 rounded-lg text-sm font-medium border border-gray-200" data-val="15">15mg</button>
+     <button class="calc-btn strength-btn px-3 py-1.5 rounded-lg text-sm font-medium border border-gray-200" data-val="30">30mg</button>
+     <button class="calc-btn strength-btn px-3 py-1.5 rounded-lg text-sm font-medium border border-gray-200" data-val="50">50mg</button>
+     <button class="calc-btn strength-btn px-3 py-1.5 rounded-lg text-sm font-medium border border-gray-200" data-val="100">100mg</button>
+     <button class="calc-btn strength-btn px-3 py-1.5 rounded-lg text-sm font-medium border border-gray-200" data-val="1000">1000mg</button>
+     <button class="calc-btn strength-btn px-3 py-1.5 rounded-lg text-sm font-medium border border-gray-200" data-val="other">Other</button>
+    </div>
+    <input type="number" id="custom-strength" placeholder="Enter strength in mg" class="hidden mt-2 w-full p-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:border-red-500" step="any">
+   </div>
+
+   <!-- 3. BAC Water Volume -->
+   <div>
+    <label class="block text-sm font-semibold text-[#0b1f3a] mb-2">3. Select BAC Water Added (ml)</label>
+    <div class="flex flex-wrap gap-2" id="water-options">
+     <button class="calc-btn water-btn px-3 py-1.5 rounded-lg text-sm font-medium border border-gray-200" data-val="0.5">0.5ml</button>
+     <button class="calc-btn water-btn px-3 py-1.5 rounded-lg text-sm font-medium border border-gray-200" data-val="1.0">1.0ml</button>
+     <button class="calc-btn water-btn px-3 py-1.5 rounded-lg text-sm font-medium border border-gray-200" data-val="1.5">1.5ml</button>
+     <button class="calc-btn water-btn px-3 py-1.5 rounded-lg text-sm font-medium border border-gray-200" data-val="2.0">2.0ml</button>
+     <button class="calc-btn water-btn px-3 py-1.5 rounded-lg text-sm font-medium border border-gray-200" data-val="2.5">2.5ml</button>
+     <button class="calc-btn water-btn px-3 py-1.5 rounded-lg text-sm font-medium border border-gray-200" data-val="3.0">3.0ml</button>
+     <button class="calc-btn water-btn px-3 py-1.5 rounded-lg text-sm font-medium border border-gray-200" data-val="5.0">5.0ml</button>
+     <button class="calc-btn water-btn px-3 py-1.5 rounded-lg text-sm font-medium border border-gray-200" data-val="other">Other</button>
+    </div>
+    <input type="number" id="custom-water" placeholder="Enter BAC water volume in ml" class="hidden mt-2 w-full p-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:border-red-500" step="any">
+   </div>
+
+  </div>
+
+  <div class="bg-gray-50 border border-gray-200 rounded-xl p-5 reveal">
+   <p data-template-id="viz-disclaimer" class="canva-text text-xs leading-relaxed text-center" style="color: rgb(107, 114, 128); font-weight: 400; font-style: normal; font-size: 16px;">This calculator is provided for educational purposes only and does not provide personalized dosing recommendations. Always follow the instructions supplied with the product and consult an appropriate healthcare professional if needed.</p>
+  </div>
+ </div>
+</div>
+
+<!-- CART -->
    <div id="page-cart" class="page relative">
     <div class="max-w-3xl mx-auto px-4 py-12 relative z-10">
      <h1 data-template-id="cart-page-title" class="canva-text font-display mb-8 reveal" style="color: rgb(11, 31, 58); font-weight: 700; font-style: normal; font-size: 32px;">Shopping Cart</h1>
@@ -919,24 +954,73 @@ document.addEventListener('click', (e) => {
   btn.appendChild(ripple); setTimeout(() => ripple.remove(), 600);
 });
 
-// Visualizer
-const volumes = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.5, 2.0];
-let currentVolIdx = 0;
-function setVolume(ml) { const idx = volumes.indexOf(ml); if (idx === -1) return; currentVolIdx = idx; updateSyringe(); }
-function updateSyringe() {
-  const ml = volumes[currentVolIdx]; const maxH = 272; const fillH = (ml / 2.0) * maxH;
+// Dosage Calculator Logic
+let selectedDose = null;
+let selectedStrength = null;
+let selectedWater = null;
+
+function setupOptionGroup(btnClass, inputId, onSelect) {
+  const buttons = document.querySelectorAll('.' + btnClass);
+  const customInput = document.getElementById(inputId);
+
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      buttons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const val = btn.dataset.val;
+
+      if (val === 'other') {
+        customInput.classList.remove('hidden');
+        customInput.focus();
+        onSelect(parseFloat(customInput.value) || null);
+      } else {
+        customInput.classList.add('hidden');
+        onSelect(parseFloat(val));
+      }
+      calculateVolume();
+    });
+  });
+
+  customInput.addEventListener('input', () => {
+    onSelect(parseFloat(customInput.value) || null);
+    calculateVolume();
+  });
+}
+
+setupOptionGroup('dose-btn', 'custom-dose', val => selectedDose = val);
+setupOptionGroup('strength-btn', 'custom-strength', val => selectedStrength = val);
+setupOptionGroup('water-btn', 'custom-water', val => selectedWater = val);
+
+function calculateVolume() {
+  if (selectedDose && selectedStrength && selectedWater && selectedStrength > 0) {
+    // Formula Pengiraan Volume Injection (ml) = (Dose / Strength) * Water Volume
+    const volume = (selectedDose / selectedStrength) * selectedWater;
+    updateSyringeDisplay(volume);
+  } else {
+    updateSyringeDisplay(0);
+  }
+}
+
+// dosage calculator
+function updateSyringeDisplay(ml) {
+  const maxSyringeCapacity = 2.0; // Maksimum julat pada skala jarum (2.0 ml)
+  const maxH = 272; // Tinggi fizikal cecair dalam SVG
+  
+  // Tentukan ketinggian cecair (clampkan maksimum pada 2.0 ml untuk paparan)
+  const clampedMl = Math.min(ml, maxSyringeCapacity);
+  const fillH = (clampedMl / maxSyringeCapacity) * maxH;
+
   document.getElementById('syringe-liquid').setAttribute('height', fillH);
   document.getElementById('syringe-liquid').setAttribute('y', 338 - fillH);
   document.getElementById('syringe-plunger').setAttribute('y', 338 - fillH - 10);
-  document.getElementById('viz-volume-display').textContent = ml === 0 ? '0.0 ml' : ml.toFixed(1) + ' ml';
-  document.querySelectorAll('.vol-btn').forEach(b => b.classList.toggle('active', parseFloat(b.dataset.vol) === ml));
+  
+  // Kemaskini Paparan Teks
+  document.getElementById('viz-volume-display').textContent = ml === 0 ? '0.00 ml' : ml.toFixed(2) + ' ml';
+
   const container = document.getElementById('syringe-container');
-  container.classList.add('zoom'); setTimeout(() => container.classList.remove('zoom'), 400);
+  container.classList.add('zoom');
+  setTimeout(() => container.classList.remove('zoom'), 400);
 }
-document.querySelectorAll('.vol-btn').forEach(btn => btn.addEventListener('click', () => setVolume(parseFloat(btn.dataset.vol))));
-document.getElementById('viz-prev').addEventListener('click', () => { if (currentVolIdx > 0) { currentVolIdx--; updateSyringe(); } });
-document.getElementById('viz-next').addEventListener('click', () => { if (currentVolIdx < volumes.length - 1) { currentVolIdx++; updateSyringe(); } });
-document.getElementById('viz-reset').addEventListener('click', () => { currentVolIdx = 0; updateSyringe(); });
 
 // Back to top
 const btt = document.getElementById('back-to-top');
