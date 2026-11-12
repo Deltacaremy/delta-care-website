@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>DeltaCare Admin</title>
+  <link rel="icon" type="image/png" href="image/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=Playfair+Display:wght@600;700&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/admin.css">
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js" defer></script>
+</head>
+<body>
+  <div id="boot" class="boot"><span class="spinner"></span></div>
+  <button type="button" class="lang-btn auth-lang" id="auth-lang" hidden>EN</button>
+
+  <!-- ===== Belum disambung ===== -->
+  <section id="view-setup" class="auth-wrap" hidden>
+    <div class="auth-card">
+      <img src="image/logo-large.webp" alt="DELTACARE" class="auth-logo">
+      <h1 data-en="Dashboard not connected">Dashboard belum disambung</h1>
+      <p class="muted" data-en="Fill in the Supabase &lt;b&gt;Project URL&lt;/b&gt; and &lt;b&gt;anon key&lt;/b&gt; in &lt;code&gt;js/config.js&lt;/code&gt;, then reload this page.">Isi <b>Project URL</b> dan <b>anon key</b> Supabase dalam fail <code>js/config.js</code>, kemudian muat semula page ini.</p>
+      <p class="muted small" data-en="Full guide: &lt;code&gt;Delta CarePANDUAN-ADMIN.md&lt;/code&gt;">Panduan penuh: <code>Delta Care\PANDUAN-ADMIN.md</code></p>
+    </div>
+  </section>
+
+  <!-- ===== Log masuk ===== -->
+  <section id="view-login" class="auth-wrap" hidden>
+    <form id="login-form" class="auth-card" novalidate>
+      <img src="image/logo-large.webp" alt="DELTACARE" class="auth-logo">
+      <h1 data-en="Admin Login">Log Masuk Admin</h1>
+      <label class="field-label">Email
+        <input id="login-email" type="email" class="input" autocomplete="username" required>
+      </label>
+      <label class="field-label"><span data-en="Password">Kata laluan</span>
+        <span class="pw-wrap">
+          <input id="login-password" type="password" class="input" autocomplete="current-password" required>
+          <button type="button" class="pw-toggle" data-pw-toggle aria-label="Tunjuk kata laluan" data-en-label="Show password"><i data-lucide="eye" class="ic"></i></button>
+        </span>
+      </label>
+      <p id="login-msg" class="form-msg" hidden></p>
+      <button type="submit" class="btn btn-primary btn-block" id="login-btn"><i data-lucide="log-in" class="ic"></i> <span data-en="Log In">Log Masuk</span></button>
+      <button type="button" class="link-btn" id="forgot-btn" data-en="Forgot password?">Lupa kata laluan?</button>
+    </form>
+
+    <form id="reset-form" class="auth-card" novalidate hidden>
+      <img src="image/logo-large.webp" alt="DELTACARE" class="auth-logo">
+      <h1 data-en="New Password">Kata Laluan Baru</h1>
+      <label class="field-label"><span data-en="New password (at least 8 characters)">Kata laluan baru (sekurang-kurangnya 8 aksara)</span>
+        <input id="reset-password" type="password" class="input" autocomplete="new-password" minlength="8" required>
+      </label>
+      <p id="reset-msg" class="form-msg" hidden></p>
+      <button type="submit" class="btn btn-primary btn-block" data-en="Save Password">Simpan Kata Laluan</button>
+    </form>
+  </section>
+
+  <!-- ===== Tiada akses ===== -->
+  <section id="view-denied" class="auth-wrap" hidden>
+    <div class="auth-card">
+      <img src="image/logo-large.webp" alt="DELTACARE" class="auth-logo">
+      <h1 data-en="No access">Tiada akses</h1>
+      <p class="muted"><span data-en="The account">Akaun</span> <b id="denied-email"></b> <span data-en="is not registered as boss or admin.">belum didaftarkan sebagai bos atau admin.</span></p>
+      <button type="button" class="btn btn-secondary btn-block" data-logout><i data-lucide="log-out" class="ic"></i> <span data-en="Log Out">Log Keluar</span></button>
+    </div>
+  </section>
+
+  <!-- ===== Dashboard ===== -->
+  <div id="view-app" class="app" hidden>
+    <aside class="sidebar">
+      <div class="side-brand">
+        <img src="image/logo.webp" alt="DELTACARE">
+        <span class="side-badge">Admin</span>
+      </div>
+      <nav class="side-nav" id="side-nav">
+        <button data-tab="ringkasan"><i data-lucide="layout-dashboard" class="ic"></i><span data-en="Overview">Ringkasan</span></button>
+        <button data-tab="order"><i data-lucide="receipt" class="ic"></i><span data-en="Orders">Order</span><b class="nav-count" id="nav-new-count" hidden></b></button>
+        <button data-tab="produk"><i data-lucide="package" class="ic"></i><span data-en="Products">Produk</span></button>
+        <button data-tab="agent"><i data-lucide="users" class="ic"></i><span data-en="Agents">Agent</span></button>
+        <button data-tab="pengumuman"><i data-lucide="megaphone" class="ic"></i><span data-en="Announcement">Pengumuman</span></button>
+        <button data-tab="pengguna" class="boss-only"><i data-lucide="shield-check" class="ic"></i><span data-en="Users">Pengguna</span></button>
+      </nav>
+      <div class="side-foot">
+        <a href="index.html" target="_blank" rel="noopener" class="side-link" data-site-link><i data-lucide="external-link" class="ic"></i> <span data-en="View website">Lihat website</span></a>
+        <div class="me">
+          <span class="me-avatar" id="me-avatar">?</span>
+          <span class="me-text"><b id="me-name"></b><small id="me-role"></small></span>
+          <button type="button" class="icon-btn" data-logout aria-label="Log keluar" title="Log keluar" data-en-label="Log out"><i data-lucide="log-out" class="ic"></i></button>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow" id="page-eyebrow">DeltaCare</p>
+          <h1 id="page-title">Ringkasan</h1>
+        </div>
+        <div class="topbar-actions">
+          <button type="button" class="btn btn-ghost" id="refresh-btn" title="Muat semula data" aria-label="Muat semula data" data-en-label="Refresh data"><i data-lucide="refresh-cw" class="ic"></i><span class="hide-sm" data-en="Refresh">Muat semula</span></button>
+          <a href="index.html" target="_blank" rel="noopener" class="icon-btn show-sm" data-site-link title="Lihat website" aria-label="Lihat website" data-en-label="View website"><i data-lucide="external-link" class="ic"></i></a>
+          <button type="button" class="lang-btn" id="lang-btn">EN</button>
+          <button type="button" class="icon-btn show-sm" data-logout aria-label="Log keluar" data-en-label="Log out"><i data-lucide="log-out" class="ic"></i></button>
+        </div>
+      </header>
+
+      <section class="tab" id="tab-ringkasan"></section>
+      <section class="tab" id="tab-order" hidden></section>
+      <section class="tab" id="tab-produk" hidden></section>
+      <section class="tab" id="tab-agent" hidden></section>
+      <section class="tab" id="tab-pengumuman" hidden></section>
+      <section class="tab" id="tab-pengguna" hidden></section>
+    </main>
+  </div>
+
+  <!-- ===== Popup ===== -->
+  <div id="modal" class="modal" hidden>
+    <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <header class="modal-head">
+        <h2 id="modal-title"></h2>
+        <button type="button" class="icon-btn" data-close-modal aria-label="Tutup" data-en-label="Close"><i data-lucide="x" class="ic"></i></button>
+      </header>
+      <div class="modal-body" id="modal-body"></div>
+      <footer class="modal-foot" id="modal-foot"></footer>
+    </div>
+  </div>
+
+  <div id="confirm" class="modal modal-confirm" hidden>
+    <div class="modal-box" role="alertdialog" aria-modal="true" aria-labelledby="confirm-title">
+      <div class="modal-body">
+        <h2 id="confirm-title"></h2>
+        <p id="confirm-text" class="muted"></p>
+      </div>
+      <footer class="modal-foot">
+        <button type="button" class="btn btn-secondary" id="confirm-no" data-en="Cancel">Batal</button>
+        <button type="button" class="btn btn-primary" id="confirm-yes">Ya</button>
+      </footer>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="js/config.js"></script>
+  <script src="js/products.js"></script>
+  <script src="js/admin.js" defer></script>
+</body>
+</html>
