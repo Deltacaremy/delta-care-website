@@ -7,6 +7,7 @@ Desktop\Delta Care\
 ├── website\               ← website sebenar (yang di-upload ke GitHub)
 │   ├── index.html         ← susun atur page & teks English
 │   ├── admin.html         ← ★ DASHBOARD ADMIN (/admin)
+│   ├── admin.webmanifest  ← tetapan "Add to Home screen" dashboard (nama + ikon)
 │   ├── vercel.json        ← tetapan Vercel (alamat /admin)
 │   ├── js\config.js       ← sambungan Supabase (URL + anon key)
 │   ├── js\admin.js        ← fungsi dashboard
@@ -74,6 +75,10 @@ dalam `index.html` atau fail js, double-click **`tools\build-css.bat`** untuk bi
 
 ## Preview link WhatsApp
 Dalam `index.html`, cari `LINK-WEBSITE-DELTACARE` dan tukar kepada link sebenar website.
+
+## Ikon app dashboard
+`image/app-icon-*.png` dan `image/apple-touch-icon.png` dibina dari `gambar-asal\dc2-logo.png`.
+Kalau logo bertukar, klik kanan **`tools\build-app-icons.ps1`** → **Run with PowerShell**.
 
 ## Saiz gambar
 Gambar website sebaiknya bawah 200 KB.

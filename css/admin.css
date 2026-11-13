@@ -280,7 +280,7 @@ button { font: inherit; color: inherit; }
   .side-brand img { height: 28px; }
   .side-nav { flex-direction: row; overflow-x: auto; gap: 2px; scrollbar-width: none; margin: 0 -12px; padding: 0 8px; }
   .side-nav::-webkit-scrollbar { display: none; }
-  .side-nav button { width: auto; flex-direction: column; gap: 3px; padding: 7px 12px 9px; font-size: .74rem; border-radius: 10px 10px 0 0; flex-shrink: 0; }
+  .side-nav button { width: auto; flex: 1 0 auto; justify-content: center; flex-direction: column; gap: 3px; padding: 7px 8px 9px; font-size: .74rem; border-radius: 10px 10px 0 0; flex-shrink: 0; }
   .side-nav button.active { background: var(--bg); color: var(--navy); }
   .side-nav button.active::before { display: none; }
   .nav-count { position: absolute; top: 2px; right: 4px; min-width: 17px; height: 17px; font-size: .65rem; }
@@ -300,6 +300,8 @@ button { font: inherit; color: inherit; }
   .grid-3 { grid-template-columns: 1fr 1fr; }
 }
 @media (max-width: 520px) {
+  .side-nav { padding: 0 4px; }
+  .side-nav button { padding: 7px 3px 9px; font-size: .7rem; }
   .stats { gap: 10px; }
   .stat { padding: 14px; }
   .stat-value { font-size: 1.25rem; }
